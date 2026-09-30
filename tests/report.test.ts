@@ -107,3 +107,17 @@ describe("auditor without a local fixture", () => {
     expect(out).toMatch(/auditor <url>/);
   });
 });
+
+describe("counts in the singular", () => {
+  it("says one type of barrier, one place and one file without a plural", async () => {
+    const { fill, CATALOG } = await import("../src/explanations.js");
+    const T = CATALOG.report;
+    expect(fill(T.a11yCount, { rules: 1, rulesWord: T.a11yRuleOne, places: 1, placesWord: T.a11yPlaceOne })).toBe(
+      "O axe encontrou 1 tipo de barreira, em 1 lugar da página.",
+    );
+    expect(fill(T.a11yCount, { rules: 2, rulesWord: T.a11yRuleMany, places: 4, placesWord: T.a11yPlaceMany })).toBe(
+      "O axe encontrou 2 tipos de barreira, em 4 lugares da página.",
+    );
+    expect(fill(T.weightTotal, { kb: "1,0", files: 1, filesWord: T.weightFileOne })).toBe("Total baixado: 1,0 KB em 1 arquivo.");
+  });
+});
