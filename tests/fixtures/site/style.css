@@ -1,0 +1,39 @@
+/* Fixture stylesheet: readable on purpose, not minified, with rules the page never uses. */
+body {
+  margin: 0;
+  padding: 1rem;
+  font-family: system-ui, sans-serif;
+  color: #1a1a1a;
+  background: #ffffff;
+}
+
+h1 {
+  font-size: 1.75rem;
+  margin: 0 0 1rem;
+}
+
+/* Low contrast on purpose: #b3b3b3 on white is about 2.1:1, below the 4.5:1 WCAG AA minimum. */
+.fraco {
+  color: #b3b3b3;
+}
+
+a {
+  color: #0b57d0;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Unused rules, so the page carries CSS it does not need. */
+.cardapio { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 1rem; }
+.cardapio-item { border: 1px solid #dddddd; border-radius: 0.5rem; padding: 1rem; }
+.cardapio-item h2 { font-size: 1.25rem; margin: 0 0 0.5rem; }
+.cardapio-item p { margin: 0; color: #444444; }
+.rodape { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eeeeee; font-size: 0.875rem; }
+.rodape a { color: inherit; text-decoration: underline; }
+.botao { display: inline-block; padding: 0.75rem 1.25rem; border-radius: 999px; background: #0b57d0; color: #ffffff; }
+.botao:hover { background: #0842a0; }
+.aviso { padding: 1rem; background: #fff4e5; border-left: 4px solid #f29900; }
