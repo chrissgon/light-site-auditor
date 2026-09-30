@@ -4,43 +4,72 @@
 
 ## Português
 
-Uma ferramenta de linha de comando, `auditor <url>`, que mede o peso de uma página, o tempo que ela leva para aparecer num celular com conexão 3G e as barreiras de acessibilidade, e escreve um relatório em português simples com o que corrigir.
+Uma ferramenta de linha de comando, `auditor <url>`, que mede o peso da página inicial de um site, o tempo que ela leva para aparecer num celular com conexão 3G e as barreiras de acessibilidade, e escreve um relatório em português simples com o que corrigir.
 
 Cada número do relatório vem dos arquivos JSON salvos ao lado dele (`lighthouse.json` e `axe.json`), e cada explicação vem de um catálogo escrito e conferido de antemão (`src/explanations.pt.json`), nunca de texto gerado na hora. A leitura do catálogo por uma pessoa ainda está pendente.
 
-### Estado
+### Regra do consentimento
 
-Primeira versão (M1): roda só no seu computador e só audita páginas locais (`localhost`, `127.0.0.1`, `[::1]`). Auditar um site real exige o consentimento do dono; esse passo ainda não existe, e a ferramenta recusa qualquer outro endereço.
+O auditor só verifica um site real se o dono aceitou. Sem um registro de consentimento aceito para o endereço exato, ele recusa e sai com o código 2. Páginas deste computador (`localhost`, `127.0.0.1`, `[::1]`) não precisam de registro. Não existe opção para pular essa verificação.
 
-### Requisitos
+1. Peça o aceite ao dono com o texto de [`docs/field/consentimento.md`](docs/field/consentimento.md). Ele diz o que a verificação faz (abre a página inicial pública duas vezes, como um visitante, e mede com o Lighthouse e o axe no seu computador), o que não faz (não entra com login, não usa formulários, não abre outras páginas) e que o relatório fica só com o dono, a menos que ele concorde com outro uso.
+2. Registre o aceite num arquivo que comece assim:
 
-- Node 22.19 ou mais novo (o Lighthouse 13.5.0 exige isso).
-- O Chromium do Playwright. Se ainda não estiver instalado: `npx playwright install chromium`.
+   ```markdown
+   ---
+   endereco: https://www.exemplo.com.br/
+   dono: Nome de quem aceitou
+   status: aceito
+   data: 2026-09-30
+   como: por e-mail, respondendo ao pedido de consentimento
+   reacao: pendente
+   ---
+   ```
 
-### Instalar e testar
+3. Rode com `--consent <arquivo>`. Um registro com `status: pendente`, outro endereço, um campo faltando ou uma data futura é recusado.
 
-```sh
-npm install
-npm test
-```
+### Instalar e usar
 
-Os testes sobem um servidor local com a página de exemplo de `tests/fixtures/site/` e não usam a internet.
+Precisa do Node 22.19 ou mais novo (o Lighthouse 13.5.0 exige isso).
 
-### Usar
-
-Num terminal, sirva a página de exemplo:
-
-```sh
-npm run fixture
-```
-
-Em outro, audite:
+Uma vez, baixe o navegador que o auditor usa (o Chromium do Playwright):
 
 ```sh
-npm run auditor -- http://127.0.0.1:4173/ --out relatorios/exemplo
+npx @chrissgon/light-site-auditor --instalar-navegador
 ```
 
-A pasta recebe `relatorio.md`, `relatorio.html`, `lighthouse.json` e `axe.json`. Sem `--out`, o relatório vai para `relatorios/<endereço>-<data e hora>/`. Depois de `npm run build`, o mesmo comando funciona com `node dist/cli.js <url>`.
+Depois, audite:
+
+```sh
+npx @chrissgon/light-site-auditor https://www.exemplo.com.br/ --consent consentimento.md --out relatorio-exemplo
+```
+
+Ou instale o comando `auditor` de vez: `npm install -g @chrissgon/light-site-auditor`, e então `auditor --instalar-navegador` e `auditor <url> --consent <arquivo>`.
+
+O que é baixado (medido em 2026-09-30, num Mac com processador Apple, com cache vazio):
+
+| O quê | Tamanho | Quando |
+|-------|---------|--------|
+| O pacote `@chrissgon/light-site-auditor` | cerca de 23 kB | no primeiro `npx` |
+| As dependências (Lighthouse, Playwright, axe e o que elas usam) | cerca de 148 MB baixados, 185 MB instalados | no primeiro `npx` |
+| O Chromium do Playwright (Chrome for Testing 153.0.8010.12) | cerca de 191 MB baixados no Mac com processador Apple, 196 MB no Linux e 205 MB no Windows; 369 MB instalado no Mac | uma vez, com `--instalar-navegador` |
+| O FFmpeg do Playwright | cerca de 1 MB | junto com o Chromium |
+
+O navegador fica na pasta de navegadores do Playwright (no Mac, `~/Library/Caches/ms-playwright`) e serve para as próximas auditorias. No Linux, o Chromium pode pedir bibliotecas do sistema: `sudo npx playwright@1.63.0 install-deps chromium`. Se o navegador faltar, o auditor avisa e sai com o código 3.
+
+### O que o relatório traz
+
+A pasta do relatório recebe `relatorio.md`, `relatorio.html`, `lighthouse.json` e `axe.json`. Sem `--out`, ela é `relatorios/<endereço>-<data e hora>/`.
+
+| Parte | O que mostra | De onde vem no JSON |
+|-------|--------------|---------------------|
+| Peso da página | total baixado e peso por tipo de arquivo (HTML, CSS, JavaScript, imagens, fontes, outros) | `lighthouse.json`: `audits["network-requests"].details.items[].transferSize` |
+| Tempo no 3G | primeira coisa na tela e parte principal na tela, em segundos | `audits["first-contentful-paint"]` e `audits["largest-contentful-paint"]`, `numericValue` |
+| O que deixa a página lenta | diagnósticos e insights do Lighthouse abaixo de 0,9, cada um com o que é e o que fazer | `audits[<id>]` |
+| Barreiras de acessibilidade | regras WCAG 2.1 níveis A e AA do axe-core 4.13.0, com os trechos da página | `axe.json`: `violations` |
+| Palavras usadas | glossário dos termos técnicos do relatório | catálogo |
+
+O perfil de 3G é o `mobileRegular3G` do próprio Lighthouse (300 ms de ida e volta, 700 kbit/s, processador 4 vezes mais lento), com a simulação padrão do Lighthouse. Fontes e datas de acesso: [`docs/spikes/3g.md`](docs/spikes/3g.md).
 
 Trecho do relatório da página de exemplo:
 
@@ -54,16 +83,16 @@ Trecho do relatório da página de exemplo:
 **O que é:** A imagem não tem texto alternativo, o alt. Quem usa leitor de tela não sabe o que ela mostra.
 ```
 
-### O que é medido
+### Desenvolver
 
-| O quê | Como | De onde vem no JSON |
-|-------|------|---------------------|
-| Peso por tipo de arquivo | soma dos bytes transferidos por tipo (HTML, CSS, JavaScript, imagens, fontes, outros) | `lighthouse.json`: `audits["network-requests"].details.items[].transferSize` |
-| Tempo para aparecer no 3G | primeira coisa na tela e parte principal na tela, em segundos | `audits["first-contentful-paint"]` e `audits["largest-contentful-paint"]`, `numericValue` |
-| O que deixa a página lenta | diagnósticos e insights do Lighthouse abaixo de 0,9 | `audits[<id>]` |
-| Barreiras de acessibilidade | regras WCAG 2.1 níveis A e AA do axe-core 4.13.0 | `axe.json`: `violations` |
+```sh
+npm ci
+npx playwright install --no-shell chromium
+npm test
+npm run build
+```
 
-O perfil de 3G é o `mobileRegular3G` do próprio Lighthouse (300 ms de ida e volta, 700 kbit/s, processador 4 vezes mais lento), com a simulação padrão do Lighthouse. Fontes e datas de acesso: [`docs/spikes/3g.md`](docs/spikes/3g.md).
+Os testes sobem um servidor local com a página de exemplo de `tests/fixtures/site/` e não usam a internet. Para testar à mão: `npm run fixture` num terminal e `npm run auditor -- http://127.0.0.1:4173/ --out relatorios/exemplo` em outro. `npm run check-report -- <pasta>` confere se todo número de um relatório já escrito vem dos JSON da pasta.
 
 ### Como os números são conferidos
 
@@ -79,63 +108,19 @@ MIT.
 
 ## English
 
-A command-line tool, `auditor <url>`, that measures a page's weight, how long it takes to appear on a phone over 3G, and its accessibility barriers, and writes a plain-Portuguese report saying what to fix.
+A command-line tool, `auditor <url>`, that measures a site's home page weight, how long it takes to appear on a phone over 3G, and its accessibility barriers (WCAG 2.1 AA), and writes a plain-Portuguese report saying what to fix, with the raw Lighthouse and axe JSON beside it.
 
-Every number in the report comes from the JSON files saved beside it (`lighthouse.json` and `axe.json`), and every explanation comes from a catalog written and checked in advance (`src/explanations.pt.json`), never from text generated at run time. A human read of the catalog is still pending.
+**Consent rule.** A real site is audited only when its owner accepted: pass a consent record with `--consent <file>` (format and the Portuguese request text in [`docs/field/consentimento.md`](docs/field/consentimento.md)). Without an accepted record for the exact address the tool refuses (exit code 2); a `pendente` (pending) record is refused too. Pages on your own computer need no record. There is no flag to skip the check.
 
-### Status
-
-First version (M1): runs on your computer only and audits local pages only (`localhost`, `127.0.0.1`, `[::1]`). Auditing a real site needs its owner's consent; that step does not exist yet, so the tool refuses any other address.
-
-### Requirements
-
-- Node 22.19 or newer (Lighthouse 13.5.0 requires it).
-- Playwright's Chromium. If it is not installed yet: `npx playwright install chromium`.
-
-### Install and test
+**Install and use** (Node 22.19 or newer):
 
 ```sh
-npm install
-npm test
+npx @chrissgon/light-site-auditor --instalar-navegador   # once: Playwright's Chromium, about 191-205 MB
+npx @chrissgon/light-site-auditor https://www.example.com/ --consent consent.md --out report
 ```
 
-The tests start a local server with the sample page in `tests/fixtures/site/` and do not use the internet.
+The first `npx` also downloads the package (about 23 kB) and its dependencies (about 148 MB, 185 MB installed). On Linux, Chromium may need system libraries: `sudo npx playwright@1.63.0 install-deps chromium`.
 
-### Use
+**The report** (`relatorio.md` and `relatorio.html`, in Portuguese): total weight and weight by file type, first and largest content on 3G in seconds, Lighthouse diagnostics that did not pass with what to do, and axe's WCAG 2.1 A and AA violations with the affected snippets. Every number comes from `lighthouse.json` or `axe.json`; every explanation comes from a catalog written in advance.
 
-In one terminal, serve the sample page:
-
-```sh
-npm run fixture
-```
-
-In another, audit it:
-
-```sh
-npm run auditor -- http://127.0.0.1:4173/ --out relatorios/exemplo
-```
-
-The folder receives `relatorio.md`, `relatorio.html`, `lighthouse.json` and `axe.json`. Without `--out`, the report goes to `relatorios/<address>-<date and time>/`. After `npm run build`, the same command works as `node dist/cli.js <url>`.
-
-### What is measured
-
-| What | How | Where it comes from in the JSON |
-|------|-----|---------------------------------|
-| Weight by file type | sum of transferred bytes per type (HTML, CSS, JavaScript, images, fonts, other) | `lighthouse.json`: `audits["network-requests"].details.items[].transferSize` |
-| Time to appear on 3G | first content and largest content on screen, in seconds | `audits["first-contentful-paint"]` and `audits["largest-contentful-paint"]`, `numericValue` |
-| What makes the page slow | Lighthouse diagnostics and insights scoring below 0.9 | `audits[<id>]` |
-| Accessibility barriers | axe-core 4.13.0 rules for WCAG 2.1 levels A and AA | `axe.json`: `violations` |
-
-The 3G profile is Lighthouse's own `mobileRegular3G` (300 ms round trip, 700 kbit/s, CPU 4 times slower), with Lighthouse's default simulated throttling. Sources and access dates: [`docs/spikes/3g.md`](docs/spikes/3g.md).
-
-### How the numbers are checked
-
-`tests/report.test.ts` runs the auditor on the sample page, recomputes from the saved JSON every number the report may show (without the report's own code), and fails on any other number. The catalog holds no digits, so no number can come from it.
-
-### The explanation catalog
-
-`src/explanations.pt.json` holds, for each axe rule and each Lighthouse weight audit, a title, what it is and what to do. `tests/explanations.test.ts` checks that every sentence has at most 25 words, that every problem has a what-to-do, that no technical word appears without a glossary entry in the report, and that the ids exist in the installed versions. A rule missing from the catalog is shown with the tool's original text and the mark "sem explicação ainda" (no explanation yet).
-
-### License
-
-MIT.
+**Develop:** `npm ci`, `npx playwright install --no-shell chromium`, `npm test`, `npm run build`. MIT license.
