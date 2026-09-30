@@ -1,6 +1,6 @@
 import { createReadStream, statSync } from "node:fs";
 import { createServer, type Server } from "node:http";
-import { extname, join, normalize, resolve } from "node:path";
+import { extname, join, normalize, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 /** The fixture site the tests and `npm run fixture` serve. */
@@ -30,7 +30,7 @@ export function serveFolder(root: string = FIXTURE_SITE, port = 0): Promise<Stat
     const file = normalize(join(root, path.endsWith("/") ? `${path}index.html` : path));
     let size = -1;
     try {
-      if (file.startsWith(root)) size = statSync(file).isFile() ? statSync(file).size : -1;
+      if (file.startsWith(root + sep)) size = statSync(file).isFile() ? statSync(file).size : -1;
     } catch {
       size = -1;
     }
