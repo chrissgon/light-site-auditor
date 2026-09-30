@@ -1,0 +1,34 @@
+{
+  "name": "light-site-auditor",
+  "version": "0.1.0",
+  "description": "A local CLI that measures a page's weight, its load time on a 3G profile and its accessibility problems, and explains them in plain Portuguese.",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "author": "Christopher Gonçalves",
+  "bin": {
+    "auditor": "dist/cli.js"
+  },
+  "engines": {
+    "node": ">=22.19"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.scripts.json",
+    "auditor": "tsx src/cli.ts",
+    "fixture": "tsx scripts/serve-fixture.ts"
+  },
+  "dependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "chrome-launcher": "1.2.2",
+    "lighthouse": "13.5.0",
+    "playwright": "1.63.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.0",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vitest": "5.0.2"
+  }
+}
