@@ -83,7 +83,11 @@ export function buildBlocks(lhr: LighthouseResult, axe: AxeResults, files: Repor
   blocks.push(
     { h: 2, text: [T.weightHeading] },
     { p: [T.weightIntro] },
-    { p: [{ strong: fill(T.weightTotal, { kb: kb(weight.total.transferBytes), files: weight.total.files }) }] },
+    { p: [{ strong: fill(T.weightTotal, {
+        kb: kb(weight.total.transferBytes),
+        files: weight.total.files,
+        filesWord: weight.total.files === 1 ? T.weightFileOne : T.weightFileMany,
+      }) }] },
     {
       table: {
         head: [T.weightType, T.weightFiles, T.weightSize],
@@ -128,7 +132,12 @@ export function buildBlocks(lhr: LighthouseResult, axe: AxeResults, files: Repor
   const places = axe.violations.reduce((n, v) => n + v.nodes.length, 0);
   blocks.push({ h: 2, text: [T.a11yHeading] }, { p: [T.a11yIntro] });
   if (axe.violations.length === 0) blocks.push({ p: [T.a11yNone] });
-  else blocks.push({ p: [{ strong: fill(T.a11yCount, { rules: axe.violations.length, places }) }] });
+  else blocks.push({ p: [{ strong: fill(T.a11yCount, {
+          rules: axe.violations.length,
+          rulesWord: axe.violations.length === 1 ? T.a11yRuleOne : T.a11yRuleMany,
+          places,
+          placesWord: places === 1 ? T.a11yPlaceOne : T.a11yPlaceMany,
+        }) }] });
   for (const v of axe.violations) {
     const e = explainAxe(v.id, v.help);
     const impact = v.impact ? CATALOG.impact[v.impact] : undefined;
