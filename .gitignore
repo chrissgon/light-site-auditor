@@ -3,3 +3,8 @@ node_modules
 /relatorios
 /.cache
 *.tgz
+
+# Environment files
+.env
+.env.*
+!.env.example
