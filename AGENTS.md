@@ -21,4 +21,7 @@ A local CLI, `auditor <url>`, that measures a page's weight by file type, its lo
 - The 3G profile is Lighthouse's `mobileRegular3G` (source and access date in `docs/spikes/3g.md`); `tests/profile.test.ts` fails if the installed Lighthouse changes it.
 - Chromium comes from Playwright (`npx playwright install chromium` if it is missing).
 - Code, comments and commits in English; the report, the catalog and one half of the README in Portuguese. Conventional Commits, signed.
-- Local only for now: no remote, no push, no npm publish (`"private": true` stays until the publication task is approved).
+- Public repository `chrissgon/light-site-auditor`. `main` is protected: every change goes through a branch and a pull request, merged by squash only when the required checks `secrets` and `build` are green, with signed commits. No force push, no rule changes, no bypass.
+- No `npm publish`: `"private": true` stays in `package.json` until the owner approves the publication task.
+- Enable the pre-commit hook once per clone: `git config core.hooksPath .githooks`. It runs the secret scan, types, tests and the build, the same checks as CI. Never skip it.
+- Credentials never enter the repository; `.env` and `.env.*` are git-ignored. Report vulnerabilities as described in `SECURITY.md`.
