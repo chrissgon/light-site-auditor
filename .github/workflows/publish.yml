@@ -1,0 +1,79 @@
+# Publishes the package to npm when a version tag (v*) is pushed. The owner approves the exact
+# payload (name, version, `npm pack --dry-run` list) before pushing the tag.
+# No token is stored anywhere: npm trusted publishing (npmjs.com, package settings, trusted publisher =
+# GitHub Actions, chrissgon/light-site-auditor, publish.yml) exchanges this job's OIDC identity for a
+# one-off credential, and npm attaches provenance. Actions are pinned to a commit (a tag can be moved).
+name: publish
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: publish
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write # the identity npm's trusted publishing checks
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: The tag matches package.json
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if [ "$GITHUB_REF_NAME" != "v$version" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match package.json version $version"
+            exit 1
+          fi
+
+      # Trusted publishing needs npm 11.5.1 or later and Node 22.14.0 or later (docs.npmjs.com/trusted-publishers).
+      - name: npm supports trusted publishing
+        run: |
+          node -e '
+            const [a, b, c] = process.argv[1].split(".").map(Number);
+            if (a < 11 || (a === 11 && (b < 5 || (b === 5 && c < 1)))) { console.error(`npm ${process.argv[1]} is older than 11.5.1`); process.exit(1); }
+          ' "$(npm --version)"
+
+      # The same checks as checks.yml, before anything leaves the runner.
+      - name: Secrets in the working tree
+        run: python3 scripts/secret-scan/secret_scan.py
+      - name: Install
+        run: npm ci
+      - name: Chromium for the tests (Playwright)
+        run: npx playwright install --with-deps --no-shell chromium
+      - name: Types
+        run: npm run typecheck
+      - name: Tests
+        run: npm test
+      - name: Build
+        run: npm run build
+      - name: Package contents
+        run: npm pack --dry-run
+
+      # A prerelease must not take the latest tag.
+      - name: Pick the dist-tag from the version
+        id: tag
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if [[ "$version" == *-* ]]; then dist=next; else dist=latest; fi
+          echo "dist=$dist" >> "$GITHUB_OUTPUT"
+          echo "publishing $version under the $dist tag"
+
+      - name: Publish
+        run: npm publish --tag "${{ steps.tag.outputs.dist }}" --provenance --access public

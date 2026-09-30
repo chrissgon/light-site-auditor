@@ -1,25 +1,39 @@
 #!/usr/bin/env node
-import { mkdirSync, realpathSync, writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { spawnSync } from "node:child_process";
+import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
+import { chromium } from "playwright";
 import { runAxe } from "./a11y.js";
+import { checkConsent } from "./consent.js";
 import { runLighthouse } from "./lighthouse.js";
 import { buildReport } from "./report.js";
 
-const USAGE = `Uso: auditor <url> [--out <pasta>]
+const USAGE = `Uso: auditor <url> [--consent <arquivo>] [--out <pasta>]
+     auditor --instalar-navegador
 
 Mede o peso da página, o tempo para aparecer num celular com 3G e as barreiras de acessibilidade,
 e escreve relatorio.md e relatorio.html em português, com lighthouse.json e axe.json ao lado.
 
-  --out <pasta>  onde salvar (padrão: relatorios/<endereço>-<data e hora>)
-  --help         mostra esta ajuda
+  --consent <arquivo>   registro do consentimento do dono do site (obrigatório para sites reais;
+                        páginas deste computador, como localhost, não precisam). Modelo e texto
+                        do pedido: docs/field/consentimento.md
+  --out <pasta>         onde salvar (padrão: relatorios/<endereço>-<data e hora>)
+  --instalar-navegador  baixa, uma vez, o Chromium que o auditor usa (o do Playwright)
+  --help                mostra esta ajuda
 
-Códigos de saída: 0 relatório escrito; 1 a auditoria falhou; 2 uso errado ou endereço recusado.
+Códigos de saída: 0 relatório escrito; 1 a auditoria falhou; 2 uso errado ou endereço recusado;
+3 falta instalar o navegador.
 `;
 
-/** Hosts on this computer. Anything else is a real site, which needs its owner's consent (T-aud-7). */
-const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "[::1]"]);
+/** The command that downloads the Chromium build this package's Playwright expects (full browser only). */
+export function browserInstallCommand(): { command: string; args: string[] } {
+  const require = createRequire(import.meta.url);
+  const cli = join(dirname(require.resolve("playwright/package.json")), "cli.js");
+  return { command: process.execPath, args: [cli, "install", "chromium", "--no-shell"] };
+}
 
 export interface Output {
   stdout: (text: string) => void;
@@ -32,7 +46,16 @@ const defaultOutput: Output = { stdout: (t) => process.stdout.write(t), stderr: 
 export async function main(argv: string[], io: Output = defaultOutput): Promise<number> {
   let parsed;
   try {
-    parsed = parseArgs({ args: argv, allowPositionals: true, options: { out: { type: "string" }, help: { type: "boolean" } } });
+    parsed = parseArgs({
+      args: argv,
+      allowPositionals: true,
+      options: {
+        out: { type: "string" },
+        consent: { type: "string" },
+        "instalar-navegador": { type: "boolean" },
+        help: { type: "boolean" },
+      },
+    });
   } catch (error) {
     io.stderr(`${(error as Error).message}\n\n${USAGE}`);
     return 2;
@@ -40,6 +63,14 @@ export async function main(argv: string[], io: Output = defaultOutput): Promise<
   if (parsed.values.help) {
     io.stdout(USAGE);
     return 0;
+  }
+  if (parsed.values["instalar-navegador"]) {
+    const { command, args } = browserInstallCommand();
+    io.stderr(
+      `Baixando o Chromium do Playwright (${args.slice(1).join(" ")}).\n` +
+        "Se aparecer um aviso em inglês sobre 'npx playwright install', pode ignorar: o auditor já traz a versão certa do Playwright.\n",
+    );
+    return spawnSync(command, args, { stdio: "inherit" }).status ?? 1;
   }
   const [target] = parsed.positionals;
   if (!target || parsed.positionals.length > 1) {
@@ -54,13 +85,31 @@ export async function main(argv: string[], io: Output = defaultOutput): Promise<
     io.stderr(`Endereço inválido: ${target}. Use um endereço completo, como http://localhost:4173/\n`);
     return 2;
   }
-  if (!LOCAL_HOSTS.has(url.hostname)) {
-    io.stderr(
-      `Recusado: ${url.hostname} não é uma página deste computador.\n` +
-        "Por enquanto o auditor só verifica páginas locais (localhost, 127.0.0.1). " +
-        "Auditar um site real exige o consentimento do dono, e esse passo ainda não existe.\n",
-    );
+  let consentText: string | undefined;
+  if (parsed.values.consent !== undefined) {
+    try {
+      consentText = readFileSync(parsed.values.consent, "utf8");
+    } catch {
+      io.stderr(`Recusado: não consegui ler o registro de consentimento ${parsed.values.consent}.\n`);
+      return 2;
+    }
+  }
+  const consent = checkConsent(url, consentText, new Date().toISOString().slice(0, 10));
+  if (!consent.ok) {
+    io.stderr(`Recusado: ${consent.reason}\n`);
     return 2;
+  }
+  if (consent.record) {
+    const r = consent.record;
+    io.stderr(`Consentimento: ${r.dono}; ${r.status} em ${r.data}; ${r.como}\n`);
+  }
+  if (!existsSync(chromium.executablePath())) {
+    io.stderr(
+      "Falta o navegador que o auditor usa (o Chromium do Playwright).\n" +
+        "Instale uma vez com: auditor --instalar-navegador\n" +
+        "(com npx: npx @chrissgon/light-site-auditor --instalar-navegador)\n",
+    );
+    return 3;
   }
 
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");

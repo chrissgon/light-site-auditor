@@ -4,70 +4,20 @@ import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { main } from "../src/cli.js";
 import { serveFolder, type StaticServer } from "./helpers/static-server.js";
+import {
+  htmlProse,
+  markdownCode,
+  markdownProse,
+  NUMBER,
+  numbersFromRaw,
+  oneDecimal,
+  strings,
+  type Json,
+} from "./helpers/report-numbers.js";
 
 // T-aud-6, AC-3: `auditor <fixture url>` writes a Portuguese report whose every number comes from the
-// raw JSON saved beside it. The expected numbers are recomputed here from the raw JSON, independently
-// of src/report.ts and src/weight.ts.
-
-type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
-
-const oneDecimal = (n: number) => (Math.round(n * 10) / 10).toFixed(1).replace(".", ",");
-const TYPE: Record<string, string> = { Document: "html", Stylesheet: "css", Script: "js", Image: "image", Font: "font" };
-
-/** Every number the report may show, derived from the raw JSON. */
-function numbersFromRaw(lhr: Json, axe: Json) {
-  const allowed = new Set<string>();
-  const add = (...values: (string | number)[]) => values.forEach((v) => allowed.add(String(v)));
-  const sums: Record<string, { files: number; bytes: number }> = {};
-  let files = 0;
-  let bytes = 0;
-  for (const item of lhr.audits["network-requests"].details.items) {
-    const type = TYPE[item.resourceType] ?? "other";
-    sums[type] ??= { files: 0, bytes: 0 };
-    sums[type].files += 1;
-    sums[type].bytes += item.transferSize;
-    files += 1;
-    bytes += item.transferSize;
-  }
-  for (const s of Object.values(sums)) add(s.files, s.bytes, oneDecimal(s.bytes / 1000));
-  add(files, bytes, oneDecimal(bytes / 1000), lhr.audits["total-byte-weight"].numericValue);
-  for (const id of ["first-contentful-paint", "largest-contentful-paint"]) {
-    const ms = lhr.audits[id].numericValue;
-    add(ms, oneDecimal(ms / 1000));
-  }
-  const t = lhr.configSettings.throttling;
-  add(t.rttMs, t.throughputKbps, t.cpuSlowdownMultiplier);
-  for (const audit of Object.values<Json>(lhr.audits)) {
-    for (const ms of Object.values<number>(audit.metricSavings ?? {})) add(ms, oneDecimal(ms / 1000));
-  }
-  add(axe.violations.length, axe.violations.reduce((n: number, v: Json) => n + v.nodes.length, 0));
-  for (const v of axe.violations) add(v.nodes.length);
-  return { allowed, total: { files, bytes } };
-}
-
-/** Every string value in a JSON document. */
-function strings(value: unknown, out = new Set<string>()): Set<string> {
-  if (typeof value === "string") out.add(value);
-  else if (value && typeof value === "object") for (const v of Object.values(value)) strings(v, out);
-  return out;
-}
-
-const NUMBER = /\d+(?:[.,]\d+)?/g;
-const without3G = (text: string) => text.replace(/(?<![\p{L}\p{N}])3G(?![\p{L}\p{N}])/gu, "");
-const markdownProse = (md: string) => without3G(md.replace(/`[^`\n]*`/g, " "));
-const markdownCode = (md: string) => [...md.matchAll(/`([^`\n]*)`/g)].map((m) => m[1]!);
-const htmlProse = (html: string) =>
-  without3G(
-    html
-      .replace(/<style[\s\S]*?<\/style>/g, " ")
-      .replace(/<code>[\s\S]*?<\/code>/g, " ")
-      .replace(/<[^>]+>/g, " ")
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">")
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'")
-      .replace(/&amp;/g, "&"),
-  );
+// raw JSON saved beside it. The expected numbers are recomputed from the raw JSON by
+// tests/helpers/report-numbers.ts, independently of src/report.ts and src/weight.ts.
 
 describe("auditor on the fixture page", () => {
   let server: StaticServer;
@@ -142,7 +92,7 @@ describe("auditor on the fixture page", () => {
 describe("auditor without a local fixture", () => {
   const quiet = { stdout: () => {}, stderr: () => {} };
 
-  it("refuses a real site: consent comes first (T-aud-7), so M1 audits only this computer", async () => {
+  it("refuses a real site without a consent record (T-aud-7)", async () => {
     let err = "";
     expect(await main(["https://example.com/"], { ...quiet, stderr: (s) => (err += s) })).toBe(2);
     expect(err).toMatch(/consentimento/);

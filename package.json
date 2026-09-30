@@ -1,23 +1,54 @@
 {
-  "name": "light-site-auditor",
+  "name": "@chrissgon/light-site-auditor",
   "version": "0.1.0",
-  "description": "A local CLI that measures a page's weight, its load time on a 3G profile and its accessibility problems, and explains them in plain Portuguese.",
+  "description": "Checks a small business's home page for weight, load time on 3G and accessibility (WCAG 2.1 AA), and explains the fixes in plain Portuguese. Real sites only with the owner's consent.",
+  "keywords": [
+    "accessibility",
+    "acessibilidade",
+    "wcag",
+    "axe",
+    "lighthouse",
+    "performance",
+    "3g",
+    "web-performance",
+    "audit",
+    "auditoria",
+    "cli",
+    "portuguese"
+  ],
+  "homepage": "https://github.com/chrissgon/light-site-auditor#readme",
+  "bugs": {
+    "url": "https://github.com/chrissgon/light-site-auditor/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrissgon/light-site-auditor.git"
+  },
   "license": "MIT",
-  "type": "module",
-  "private": true,
   "author": "Christopher Gonçalves",
+  "type": "module",
   "bin": {
     "auditor": "dist/cli.js"
   },
+  "files": [
+    "dist/",
+    "docs/field/consentimento.md"
+  ],
   "engines": {
     "node": ">=22.19"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.scripts.json",
     "auditor": "tsx src/cli.ts",
-    "fixture": "tsx scripts/serve-fixture.ts"
+    "fixture": "tsx scripts/serve-fixture.ts",
+    "check-report": "tsx scripts/check-report.ts",
+    "prepack": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && npm run build"
   },
   "dependencies": {
     "@axe-core/playwright": "4.13.0",

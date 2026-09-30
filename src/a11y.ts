@@ -15,7 +15,9 @@ export const WCAG21_AA_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"] as co
  * axe-core with the WCAG 2.1 A and AA rules, and returns axe's raw result.
  */
 export async function runAxe(url: string): Promise<AxeResults> {
-  const browser = await chromium.launch();
+  // The full Chromium in its new headless mode, the same browser Lighthouse drives (src/lighthouse.ts),
+  // so users install one browser (`playwright install chromium --no-shell`), not two.
+  const browser = await chromium.launch({ channel: "chromium" });
   try {
     const screen = screenEmulationMetrics.mobile!;
     const context = await browser.newContext({

@@ -8,3 +8,6 @@ node_modules
 .env
 .env.*
 !.env.example
+
+# Field reports and consent records stay local: a report belongs to the site owner (docs/field/consentimento.md)
+/docs/field/*/

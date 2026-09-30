@@ -45,7 +45,7 @@ jobs:
       - name: Install
         run: npm ci
       - name: Chromium for the tests (Playwright)
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps --no-shell chromium
       - name: Types
         run: npm run typecheck
       - name: Tests (Chromium and a local fixture server, no internet)
