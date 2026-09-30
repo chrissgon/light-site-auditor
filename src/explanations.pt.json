@@ -1,0 +1,617 @@
+{
+  "language": "pt-BR",
+  "review": {
+    "status": "pending-human-review",
+    "automatedChecks": "tests/explanations.test.ts: frases de até vinte e cinco palavras, nenhum algarismo, todo termo técnico declarado e definido no glossário, um 'o que fazer' em cada problema, ids reais do axe-core e do Lighthouse.",
+    "humanReview": "Falta: leitura do texto por uma pessoa (tarefa T-aud-5 do backlog). Registre aqui quem revisou e quando."
+  },
+  "glossary": {
+    "HTML": "O código que monta o conteúdo da página, como textos, imagens e links.",
+    "CSS": "O código que define a aparência da página, como cores, tamanhos e posições.",
+    "JavaScript": "O código que faz a página reagir a cliques e mudar sem recarregar.",
+    "atributo": "Uma informação extra escrita dentro de uma marcação no código da página.",
+    "alt": "O texto alternativo de uma imagem. Ele descreve a imagem para quem não consegue vê-la.",
+    "contraste": "A diferença de claridade entre o texto e o fundo atrás dele.",
+    "leitor de tela": "Um programa que lê a página em voz alta para pessoas cegas ou com baixa visão.",
+    "navegador": "O programa usado para abrir sites, como Chrome, Safari ou Firefox.",
+    "servidor": "O computador que guarda o site e o envia para quem o visita.",
+    "cache": "Uma cópia que o navegador guarda para não baixar o mesmo arquivo de novo.",
+    "compressão": "Um jeito de encolher arquivos de texto antes de enviá-los, sem perder nada do conteúdo.",
+    "KB": "Quilobyte, a unidade usada para medir o tamanho de arquivos. Quanto maior o número, mais demora para baixar.",
+    "ARIA": "Um conjunto de marcações extras que explicam partes da página para leitores de tela.",
+    "foco": "A marca que mostra em que ponto da página o teclado está, ao navegar com a tecla Tab.",
+    "WebP": "Um formato de imagem moderno, que ocupa menos espaço com a mesma qualidade.",
+    "AVIF": "Outro formato de imagem moderno, que costuma ocupar ainda menos espaço que o WebP.",
+    "3G": "Um tipo de conexão de internet de celular antiga e lenta.",
+    "JSON": "Um arquivo de dados feito para programas lerem. Os números deste relatório saem dele.",
+    "Lighthouse": "Uma ferramenta gratuita do Google que mede a velocidade de páginas da web.",
+    "axe": "Uma ferramenta gratuita que procura barreiras de acessibilidade em páginas da web.",
+    "acessibilidade": "O quanto a página pode ser usada por todas as pessoas, inclusive pessoas com deficiência.",
+    "WCAG": "As diretrizes internacionais de acessibilidade para a web. Esta verificação usa os níveis A e AA.",
+    "kbit/s": "Quilobits por segundo, a medida da velocidade da internet. Quanto menor o número, mais lenta a conexão.",
+    "milissegundo": "A milésima parte de um segundo."
+  },
+  "jargon": [
+    "script",
+    "DOM",
+    "viewport",
+    "render",
+    "renderização",
+    "renderizar",
+    "minificar",
+    "minificado",
+    "minificação",
+    "preload",
+    "fetchpriority",
+    "lazy",
+    "HTTP",
+    "HTTPS",
+    "CDN",
+    "byte",
+    "bytes",
+    "pixel",
+    "pixels",
+    "tag",
+    "frame",
+    "iframe",
+    "SVG",
+    "protocolo",
+    "redirecionamento",
+    "framework",
+    "plugin",
+    "API",
+    "LCP",
+    "FCP",
+    "TBT",
+    "CLS",
+    "INP",
+    "UX",
+    "SEO",
+    "landmark",
+    "label",
+    "input",
+    "div",
+    "span",
+    "role",
+    "lang",
+    "title",
+    "bundle",
+    "polyfill",
+    "throttling",
+    "RTT",
+    "Kbps",
+    "CPU"
+  ],
+  "impact": {
+    "critical": "impede o uso",
+    "serious": "atrapalha muito",
+    "moderate": "atrapalha",
+    "minor": "incomoda"
+  },
+  "fileTypes": {
+    "html": "Página (HTML)",
+    "css": "Aparência (CSS)",
+    "js": "Código interativo (JavaScript)",
+    "image": "Imagens",
+    "font": "Fontes de letra",
+    "other": "Outros arquivos"
+  },
+  "report": {
+    "title": "Relatório do site",
+    "intro": "Este relatório mostra quanto a página pesa, quanto demora para aparecer num celular com internet fraca e o que impede algumas pessoas de usá-la.",
+    "introSources": "Os números vêm de duas ferramentas, o Lighthouse e o axe, e estão nos arquivos JSON salvos ao lado deste relatório.",
+    "introTerms": "As palavras técnicas estão explicadas no fim, na seção de palavras usadas.",
+    "page": "Página verificada",
+    "measuredAt": "Medida em",
+    "weightHeading": "Peso da página",
+    "weightIntro": "Cada visita baixa estes arquivos. No celular, cada arquivo gasta tempo e parte do plano de dados.",
+    "weightTotal": "Total baixado: {kb} KB em {files} arquivos.",
+    "weightType": "Tipo de arquivo",
+    "weightFiles": "Arquivos",
+    "weightSize": "Tamanho baixado (KB)",
+    "loadHeading": "Tempo para aparecer num celular com 3G",
+    "loadIntro": "O Lighthouse simula um celular comum numa conexão 3G e mede quanto tempo cada parte da página leva para aparecer.",
+    "loadProfile": "Conexão simulada: espera de ida e volta de {rtt} milissegundos, velocidade de {kbps} kbit/s e processador {cpu} vezes mais lento que o computador da medição.",
+    "loadMetric": "{title}: {seconds} segundos.",
+    "speedHeading": "O que deixa a página pesada ou lenta",
+    "speedNone": "O Lighthouse não apontou nenhum problema de peso ou velocidade nesta página.",
+    "speedGainLcp": "Corrigir isso pode fazer a parte principal aparecer até {seconds} segundos mais cedo.",
+    "speedGainFcp": "Corrigir isso pode fazer a primeira coisa aparecer até {seconds} segundos mais cedo.",
+    "a11yHeading": "Barreiras de acessibilidade",
+    "a11yIntro": "O axe procurou barreiras que as diretrizes WCAG pedem para remover. Cada uma impede ou atrapalha alguém de usar a página.",
+    "a11yCount": "O axe encontrou {rules} tipos de barreira, em {places} lugares da página.",
+    "a11yNone": "O axe não encontrou nenhuma barreira pelas regras WCAG nesta página.",
+    "a11yNote": "Ferramentas automáticas acham só parte das barreiras. Um teste com pessoas reais continua necessário.",
+    "a11yPlaces": "Aparece em {places} lugares da página.",
+    "a11yWhere": "Onde está",
+    "severity": "Gravidade",
+    "whatItIs": "O que é",
+    "whatToDo": "O que fazer",
+    "noExplanation": "sem explicação ainda",
+    "noExplanationNote": "Este problema ainda não tem explicação em português simples. Abaixo está o texto original da ferramenta, em inglês.",
+    "original": "Texto original",
+    "termsHeading": "Palavras usadas neste relatório",
+    "sourcesHeading": "De onde vêm os números",
+    "sourcesIntro": "Cada número acima pode ser conferido nos arquivos JSON desta pasta, no lugar indicado abaixo.",
+    "sourcesWeight": "Peso por tipo: soma dos arquivos do mesmo tipo, no arquivo do Lighthouse",
+    "sourcesTotal": "Total baixado: soma de todos os arquivos, igual ao total do próprio Lighthouse",
+    "sourcesTime": "Tempos: valor medido de cada métrica, em milissegundos, no arquivo do Lighthouse",
+    "sourcesProfile": "Conexão simulada: configuração usada pelo Lighthouse",
+    "sourcesGain": "Ganhos possíveis: economia estimada de cada problema, em milissegundos, no arquivo do Lighthouse",
+    "sourcesA11y": "Barreiras e lugares: lista de barreiras do axe e os lugares de cada uma"
+  },
+  "metrics": {
+    "first-contentful-paint": {
+      "title": "Primeira coisa na tela",
+      "what": "Quanto tempo leva até aparecer o primeiro texto ou imagem. Antes disso, a pessoa vê a tela em branco."
+    },
+    "largest-contentful-paint": {
+      "title": "Parte principal na tela",
+      "what": "Quanto tempo leva até aparecer o maior texto ou imagem da tela. É quando a página parece pronta para quem visita."
+    }
+  },
+  "lighthouse": {
+    "total-byte-weight": {
+      "title": "A página é pesada",
+      "what": "A página inteira pesa muito para baixar. No celular com internet fraca, isso atrasa tudo e gasta o plano de dados.",
+      "fix": "Comece pelos arquivos maiores da tabela de peso. Imagens costumam ser as primeiras a reduzir.",
+      "terms": []
+    },
+    "image-delivery-insight": {
+      "title": "Imagens maiores do que precisam",
+      "what": "Há imagens com mais detalhe ou mais peso do que o tamanho em que aparecem na tela.",
+      "fix": "Salve cada imagem no tamanho em que ela aparece e use um formato moderno, como WebP ou AVIF.",
+      "terms": [
+        "WebP",
+        "AVIF"
+      ]
+    },
+    "render-blocking-insight": {
+      "title": "Arquivos que seguram a página em branco",
+      "what": "O navegador espera alguns arquivos de aparência ou de código terminarem de baixar antes de mostrar qualquer coisa.",
+      "fix": "Peça a quem cuida do site para carregar esses arquivos depois, ou para colocar o essencial dentro da própria página.",
+      "terms": [
+        "navegador"
+      ]
+    },
+    "lcp-discovery-insight": {
+      "title": "A imagem principal não tem prioridade",
+      "what": "O navegador não sabe que a imagem principal é a mais importante e não a baixa primeiro.",
+      "fix": "Peça a quem cuida do site para marcar a imagem principal como prioritária e nunca adiar o carregamento dela.",
+      "terms": [
+        "navegador"
+      ]
+    },
+    "network-dependency-tree-insight": {
+      "title": "Arquivos que esperam por outros",
+      "what": "Alguns arquivos só começam a baixar depois que outro termina. Na internet lenta, cada espera soma tempo.",
+      "fix": "Peça a quem cuida do site para encurtar essas esperas e avisar o navegador cedo sobre os arquivos importantes.",
+      "terms": [
+        "navegador"
+      ]
+    },
+    "cache-insight": {
+      "title": "Arquivos baixados de novo a cada visita",
+      "what": "O servidor não autoriza o navegador a guardar os arquivos. Quem volta ao site baixa tudo outra vez.",
+      "fix": "Configure o servidor para permitir cache longo em imagens e arquivos que mudam pouco.",
+      "terms": [
+        "servidor",
+        "navegador",
+        "cache"
+      ]
+    },
+    "document-latency-insight": {
+      "title": "A página demora a começar a chegar",
+      "what": "O servidor demora para responder, manda o visitante para outro endereço antes ou envia o texto sem compressão.",
+      "fix": "Verifique a hospedagem, evite desvios de endereço desnecessários e ative a compressão no servidor.",
+      "terms": [
+        "servidor",
+        "compressão"
+      ]
+    },
+    "font-display-insight": {
+      "title": "Texto invisível enquanto a fonte de letra chega",
+      "what": "O texto fica escondido até a fonte de letra própria do site terminar de baixar.",
+      "fix": "Peça a quem cuida do site para mostrar o texto com uma fonte comum enquanto a fonte própria chega.",
+      "terms": []
+    },
+    "unused-css-rules": {
+      "title": "Regras de aparência que a página não usa",
+      "what": "A página baixa regras de CSS que não usa. Elas pesam sem trazer nada para quem visita.",
+      "fix": "Remova as regras que nenhuma página usa, ou separe as regras de cada página.",
+      "terms": [
+        "CSS"
+      ]
+    },
+    "unused-javascript": {
+      "title": "Código interativo que a página não usa",
+      "what": "A página baixa código JavaScript que não roda nela.",
+      "fix": "Remova pacotes de código e trechos que não são usados, ou carregue cada parte só onde ela é necessária.",
+      "terms": [
+        "JavaScript"
+      ]
+    },
+    "unminified-css": {
+      "title": "Arquivos de aparência com espaços sobrando",
+      "what": "O arquivo de CSS vai com espaços, quebras de linha e comentários que só servem para quem escreve o código.",
+      "fix": "Ligue a opção de encolher arquivos da sua ferramenta de criação de sites ou da hospedagem antes de publicar.",
+      "terms": [
+        "CSS"
+      ]
+    },
+    "unminified-javascript": {
+      "title": "Código interativo com espaços sobrando",
+      "what": "O arquivo de JavaScript vai com espaços, quebras de linha e comentários que só servem para quem escreve o código.",
+      "fix": "Ligue a opção de encolher arquivos da sua ferramenta de criação de sites ou da hospedagem antes de publicar.",
+      "terms": [
+        "JavaScript"
+      ]
+    },
+    "legacy-javascript-insight": {
+      "title": "Código extra para navegadores antigos",
+      "what": "A página envia código a mais para funcionar em navegadores antigos. Os navegadores atuais não precisam dele.",
+      "fix": "Peça a quem cuida do site para gerar o código só para navegadores atuais.",
+      "terms": [
+        "navegador"
+      ]
+    },
+    "duplicated-javascript-insight": {
+      "title": "Código repetido",
+      "what": "O mesmo pacote de código aparece mais de uma vez, e o celular baixa todas as cópias.",
+      "fix": "Peça a quem cuida do site para manter uma só cópia de cada pacote de código.",
+      "terms": []
+    },
+    "third-parties-insight": {
+      "title": "Serviços de outras empresas pesando na página",
+      "what": "Ferramentas de outras empresas, como chats, anúncios e contadores de visitas, baixam arquivos e ocupam o celular.",
+      "fix": "Mantenha só os serviços que você realmente usa e remova os outros.",
+      "terms": []
+    },
+    "unsized-images": {
+      "title": "Imagens sem tamanho definido",
+      "what": "Algumas imagens não informam largura e altura. O conteúdo pula de lugar quando elas terminam de chegar.",
+      "fix": "Informe a largura e a altura de cada imagem no código da página.",
+      "terms": []
+    },
+    "dom-size-insight": {
+      "title": "Página com partes demais",
+      "what": "A página tem uma quantidade muito grande de blocos. O celular demora para montar e atualizar tudo.",
+      "fix": "Divida conteúdos longos em mais páginas e remova blocos escondidos que ninguém usa.",
+      "terms": []
+    },
+    "bootup-time": {
+      "title": "Código interativo demorando para rodar",
+      "what": "O celular gasta muito tempo processando o código JavaScript da página.",
+      "fix": "Remova códigos e serviços que não são essenciais, ou carregue-os depois que a página aparecer.",
+      "terms": [
+        "JavaScript"
+      ]
+    },
+    "mainthread-work-breakdown": {
+      "title": "O celular trabalha demais para montar a página",
+      "what": "O processador do celular fica ocupado por muito tempo com a aparência, o código e o desenho da página.",
+      "fix": "Reduza código interativo e efeitos visuais pesados, começando pelos que você não usa.",
+      "terms": []
+    },
+    "viewport-insight": {
+      "title": "Página não ajustada à tela do celular",
+      "what": "A página não avisa ao celular que deve caber na largura da tela, e o toque pode demorar a responder.",
+      "fix": "Peça a quem cuida do site para incluir a marcação de ajuste à tela do celular no começo da página.",
+      "terms": []
+    },
+    "modern-http-insight": {
+      "title": "Entrega de arquivos no modo antigo",
+      "what": "O servidor entrega os arquivos com uma versão antiga das regras da web, mais lenta quando há muitos arquivos.",
+      "fix": "Peça à hospedagem para ativar a versão atual de entrega de arquivos.",
+      "terms": [
+        "servidor"
+      ]
+    }
+  },
+  "axe": {
+    "color-contrast": {
+      "title": "Texto difícil de ler",
+      "what": "O texto tem pouco contraste com o fundo. Pessoas com baixa visão, ou lendo no sol, não conseguem ler.",
+      "fix": "Escureça o texto ou clareie o fundo até a leitura ficar fácil. Uma ferramenta de contraste mostra quando passa.",
+      "terms": [
+        "contraste"
+      ]
+    },
+    "image-alt": {
+      "title": "Imagem sem descrição",
+      "what": "A imagem não tem texto alternativo, o alt. Quem usa leitor de tela não sabe o que ela mostra.",
+      "fix": "Escreva no alt o que a imagem mostra, em poucas palavras. Se ela for só decoração, deixe o alt vazio.",
+      "terms": [
+        "alt",
+        "leitor de tela"
+      ]
+    },
+    "label": {
+      "title": "Campo de formulário sem nome",
+      "what": "Um campo de formulário não tem um nome ligado a ele. Quem usa leitor de tela não sabe o que preencher.",
+      "fix": "Coloque um texto visível ao lado de cada campo e ligue esse texto ao campo no código.",
+      "terms": [
+        "leitor de tela"
+      ]
+    },
+    "link-name": {
+      "title": "Link sem texto",
+      "what": "Um link não tem texto que diga para onde leva. Muitas vezes é um ícone sozinho.",
+      "fix": "Escreva um texto no link, ou dê ao ícone um nome que o leitor de tela possa ler.",
+      "terms": [
+        "leitor de tela"
+      ]
+    },
+    "button-name": {
+      "title": "Botão sem nome",
+      "what": "Um botão não tem texto que diga o que ele faz. Quem usa leitor de tela ouve só a palavra botão.",
+      "fix": "Escreva um texto no botão, ou dê ao ícone do botão um nome que o leitor de tela possa ler.",
+      "terms": [
+        "leitor de tela"
+      ]
+    },
+    "input-button-name": {
+      "title": "Botão de formulário sem nome",
+      "what": "Um botão de formulário não tem texto que diga o que ele faz.",
+      "fix": "Escreva no botão o que ele faz, como enviar ou buscar.",
+      "terms": []
+    },
+    "input-image-alt": {
+      "title": "Botão de imagem sem descrição",
+      "what": "Um botão feito com uma imagem não tem texto alternativo. Quem usa leitor de tela não sabe o que ele faz.",
+      "fix": "Escreva no alt da imagem o que o botão faz, como enviar ou buscar.",
+      "terms": [
+        "alt",
+        "leitor de tela"
+      ]
+    },
+    "html-has-lang": {
+      "title": "Página sem idioma informado",
+      "what": "A página não diz em que idioma está escrita. O leitor de tela pode ler o português com sotaque errado.",
+      "fix": "Informe o idioma da página no código, por exemplo português do Brasil.",
+      "terms": [
+        "leitor de tela"
+      ]
+    },
+    "html-lang-valid": {
+      "title": "Idioma da página escrito errado",
+      "what": "O idioma informado no código da página não existe na lista oficial de idiomas.",
+      "fix": "Corrija o código do idioma. Para português do Brasil, use o código oficial desse idioma.",
+      "terms": []
+    },
+    "valid-lang": {
+      "title": "Idioma de um trecho escrito errado",
+      "what": "Um trecho da página informa um idioma que não existe na lista oficial de idiomas.",
+      "fix": "Corrija o código do idioma desse trecho, ou apague a informação se o trecho estiver no idioma da página.",
+      "terms": []
+    },
+    "document-title": {
+      "title": "Página sem título",
+      "what": "A página não tem título. É ele que aparece na aba do navegador e que o leitor de tela lê primeiro.",
+      "fix": "Dê à página um título curto que diga o nome do site e o assunto da página.",
+      "terms": [
+        "navegador",
+        "leitor de tela"
+      ]
+    },
+    "select-name": {
+      "title": "Lista de opções sem nome",
+      "what": "Uma lista de escolha não tem nome. Quem usa leitor de tela não sabe o que está escolhendo.",
+      "fix": "Coloque um texto visível ao lado da lista e ligue esse texto à lista no código.",
+      "terms": [
+        "leitor de tela"
+      ]
+    },
+    "frame-title": {
+      "title": "Conteúdo embutido sem nome",
+      "what": "Um conteúdo de outro site dentro da página, como um mapa ou vídeo, não tem nome.",
+      "fix": "Dê a esse conteúdo um nome curto que diga o que ele é, como mapa da loja.",
+      "terms": []
+    },
+    "meta-viewport": {
+      "title": "Página impede o zoom",
+      "what": "A página não deixa a pessoa aumentar o texto com os dedos. Quem enxerga pouco precisa do zoom.",
+      "fix": "Remova do código da página a regra que bloqueia o zoom.",
+      "terms": []
+    },
+    "meta-refresh": {
+      "title": "Página que recarrega sozinha",
+      "what": "A página recarrega ou muda de endereço sozinha depois de um tempo. A pessoa perde o que estava lendo.",
+      "fix": "Remova a recarga automática, ou deixe a pessoa escolher quando atualizar.",
+      "terms": []
+    },
+    "list": {
+      "title": "Lista montada do jeito errado",
+      "what": "Uma lista tem, dentro dela, partes que não são itens. O leitor de tela conta os itens errado.",
+      "fix": "Deixe dentro da lista só os itens dela, e coloque o resto fora.",
+      "terms": [
+        "leitor de tela"
+      ]
+    },
+    "listitem": {
+      "title": "Item de lista fora de uma lista",
+      "what": "Um item de lista está solto, fora de uma lista. O leitor de tela não o anuncia como parte de uma lista.",
+      "fix": "Coloque o item dentro de uma lista, ou transforme-o em texto comum.",
+      "terms": [
+        "leitor de tela"
+      ]
+    },
+    "role-img-alt": {
+      "title": "Figura sem descrição",
+      "what": "Um elemento marcado como imagem não tem descrição. Quem usa leitor de tela não sabe o que ele mostra.",
+      "fix": "Dê a essa imagem um nome curto que diga o que ela mostra.",
+      "terms": [
+        "leitor de tela"
+      ]
+    },
+    "svg-img-alt": {
+      "title": "Desenho sem descrição",
+      "what": "Um desenho ou ícone marcado como imagem não tem descrição para quem usa leitor de tela.",
+      "fix": "Dê ao desenho um nome curto que diga o que ele mostra.",
+      "terms": [
+        "leitor de tela"
+      ]
+    },
+    "aria-required-attr": {
+      "title": "Marcação de acessibilidade incompleta",
+      "what": "Uma parte da página usa marcações ARIA, mas falta uma informação que elas exigem.",
+      "fix": "Peça a quem cuida do site para completar as marcações ARIA dessa parte, ou removê-las.",
+      "terms": [
+        "ARIA",
+        "acessibilidade"
+      ]
+    },
+    "aria-valid-attr-value": {
+      "title": "Marcação de acessibilidade com valor errado",
+      "what": "Uma marcação ARIA tem um valor que não existe. O leitor de tela pode anunciar algo falso.",
+      "fix": "Peça a quem cuida do site para corrigir o valor da marcação ARIA dessa parte.",
+      "terms": [
+        "leitor de tela",
+        "ARIA",
+        "acessibilidade"
+      ]
+    },
+    "aria-valid-attr": {
+      "title": "Marcação de acessibilidade com nome errado",
+      "what": "Uma marcação ARIA tem um nome que não existe, e o leitor de tela a ignora.",
+      "fix": "Peça a quem cuida do site para corrigir o nome da marcação ARIA dessa parte.",
+      "terms": [
+        "leitor de tela",
+        "ARIA",
+        "acessibilidade"
+      ]
+    },
+    "aria-allowed-attr": {
+      "title": "Marcação de acessibilidade no lugar errado",
+      "what": "Uma marcação ARIA foi usada numa parte da página que não aceita essa marcação.",
+      "fix": "Peça a quem cuida do site para remover essa marcação ARIA ou trocá-la por uma permitida.",
+      "terms": [
+        "ARIA",
+        "acessibilidade"
+      ]
+    },
+    "aria-hidden-focus": {
+      "title": "Parte escondida que o teclado alcança",
+      "what": "Uma parte está escondida do leitor de tela, mas o teclado ainda chega nela. A pessoa fica sem saber onde está.",
+      "fix": "Tire essa parte do caminho do teclado, ou deixe o leitor de tela enxergá-la.",
+      "terms": [
+        "leitor de tela"
+      ]
+    },
+    "aria-command-name": {
+      "title": "Comando sem nome",
+      "what": "Um botão ou link feito com marcações ARIA não tem nome. Quem usa leitor de tela não sabe o que ele faz.",
+      "fix": "Dê a esse comando um nome curto que diga o que ele faz.",
+      "terms": [
+        "ARIA",
+        "leitor de tela"
+      ]
+    },
+    "aria-input-field-name": {
+      "title": "Campo sem nome",
+      "what": "Um campo feito com marcações ARIA não tem nome. Quem usa leitor de tela não sabe o que preencher.",
+      "fix": "Dê a esse campo um nome visível que diga o que preencher.",
+      "terms": [
+        "ARIA",
+        "leitor de tela"
+      ]
+    },
+    "nested-interactive": {
+      "title": "Botão dentro de botão",
+      "what": "Um controle clicável está dentro de outro. O teclado e o leitor de tela não conseguem chegar no de dentro.",
+      "fix": "Separe os dois controles, um ao lado do outro.",
+      "terms": [
+        "leitor de tela"
+      ]
+    },
+    "link-in-text-block": {
+      "title": "Link que só se distingue pela cor",
+      "what": "Um link no meio do texto só se diferencia pela cor. Quem não distingue cores não o encontra.",
+      "fix": "Sublinhe os links que ficam no meio do texto.",
+      "terms": []
+    },
+    "autocomplete-valid": {
+      "title": "Preenchimento automático configurado errado",
+      "what": "Um campo pede um tipo de preenchimento automático que não existe. O navegador não consegue ajudar a preencher.",
+      "fix": "Peça a quem cuida do site para usar um dos tipos oficiais de preenchimento, como nome ou email.",
+      "terms": [
+        "navegador"
+      ]
+    },
+    "video-caption": {
+      "title": "Vídeo sem legenda",
+      "what": "Um vídeo não tem legendas. Pessoas surdas ou com o som desligado não entendem o que é falado.",
+      "fix": "Adicione legendas ao vídeo com o que é falado e os sons importantes.",
+      "terms": []
+    },
+    "object-alt": {
+      "title": "Conteúdo embutido sem descrição",
+      "what": "Um conteúdo embutido na página não tem texto alternativo para quem usa leitor de tela.",
+      "fix": "Dê a esse conteúdo um texto que diga o que ele mostra.",
+      "terms": [
+        "leitor de tela"
+      ]
+    },
+    "area-alt": {
+      "title": "Área clicável de imagem sem descrição",
+      "what": "Uma parte clicável de uma imagem não tem texto alternativo. Quem usa leitor de tela não sabe para onde ela leva.",
+      "fix": "Escreva no alt de cada área para onde ela leva.",
+      "terms": [
+        "alt",
+        "leitor de tela"
+      ]
+    },
+    "bypass": {
+      "title": "Sem atalho para o conteúdo",
+      "what": "Não há um jeito de pular o menu e ir direto ao conteúdo. Quem usa teclado passa pelo menu inteiro em cada página.",
+      "fix": "Adicione um link para pular ao conteúdo no começo da página, ou marque as regiões principais no código.",
+      "terms": []
+    },
+    "form-field-multiple-labels": {
+      "title": "Campo com mais de um nome",
+      "what": "Um campo de formulário tem dois ou mais nomes ligados a ele. O leitor de tela pode ler o nome errado.",
+      "fix": "Deixe um único nome ligado a cada campo.",
+      "terms": [
+        "leitor de tela"
+      ]
+    },
+    "scrollable-region-focusable": {
+      "title": "Área com rolagem que o teclado não alcança",
+      "what": "Uma área da página rola, mas quem usa só o teclado não consegue chegar nela para rolar.",
+      "fix": "Peça a quem cuida do site para deixar essa área alcançável pelo teclado.",
+      "terms": []
+    },
+    "duplicate-id-aria": {
+      "title": "Nomes internos repetidos",
+      "what": "Duas partes da página usam o mesmo nome interno, e o leitor de tela liga a descrição à parte errada.",
+      "fix": "Peça a quem cuida do site para dar um nome interno único a cada parte.",
+      "terms": [
+        "leitor de tela"
+      ]
+    },
+    "aria-roles": {
+      "title": "Marcação de papel que não existe",
+      "what": "Uma parte da página diz ser algo usando uma marcação ARIA que não existe.",
+      "fix": "Peça a quem cuida do site para corrigir ou remover essa marcação ARIA.",
+      "terms": [
+        "ARIA"
+      ]
+    },
+    "aria-required-children": {
+      "title": "Grupo sem as partes que deveria ter",
+      "what": "Uma parte marcada com ARIA como grupo, lista ou menu não contém os itens que esse tipo exige.",
+      "fix": "Peça a quem cuida do site para completar os itens do grupo ou corrigir a marcação ARIA.",
+      "terms": [
+        "ARIA"
+      ]
+    },
+    "aria-required-parent": {
+      "title": "Item fora do grupo certo",
+      "what": "Um item marcado com ARIA, como item de menu, está fora do grupo a que pertence.",
+      "fix": "Peça a quem cuida do site para colocar o item dentro do grupo certo.",
+      "terms": [
+        "ARIA"
+      ]
+    }
+  }
+}
