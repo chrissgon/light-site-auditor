@@ -17,7 +17,7 @@ A local CLI, `auditor <url>`, that measures a page's weight by file type, its lo
 
 - Audit only with the site owner's consent. Until the consent flow exists (T-aud-7, milestone M2), the CLI refuses any host other than `localhost`, `127.0.0.1` and `[::1]`, and tests only use the fixture in `tests/fixtures/site/`.
 - Every number in a report comes from the raw JSON saved beside it (`lighthouse.json`, `axe.json`); `tests/report.test.ts` checks this. Never write a number into the report that the JSON does not hold or that is not a sum of its values.
-- Plain-language text comes only from `src/explanations.pt.json`, a reviewed catalog: sentences of at most 25 words, no digits, every technical term listed in the entry and defined in the glossary. Nothing is generated at run time. `tests/explanations.test.ts` enforces this.
+- Plain-language text comes only from `src/explanations.pt.json`, a catalog written in advance (human review pending, see its `review` field): sentences of at most 25 words, no digits, every technical term listed in the entry and defined in the glossary. Nothing is generated at run time. `tests/explanations.test.ts` enforces this.
 - The 3G profile is Lighthouse's `mobileRegular3G` (source and access date in `docs/spikes/3g.md`); `tests/profile.test.ts` fails if the installed Lighthouse changes it.
 - Chromium comes from Playwright (`npx playwright install chromium` if it is missing).
 - Code, comments and commits in English; the report, the catalog and one half of the README in Portuguese. Conventional Commits, signed.
