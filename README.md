@@ -57,7 +57,7 @@ What is downloaded (measured on 2026-09-30, on a Mac with an Apple processor, wi
 
 | What | Size | When |
 |------|------|------|
-| The `@chrissgon/light-site-auditor` package | about 23 kB | on the first `npx` |
+| The `@chrissgon/light-site-auditor` package | about 31 kB (version 0.2.0, from `npm pack` on 2026-10-01) | on the first `npx` |
 | The dependencies (Lighthouse, Playwright, axe and what they use) | about 148 MB downloaded, 185 MB installed | on the first `npx` |
 | Playwright's Chromium (Chrome for Testing 153.0.8010.12) | about 191 MB downloaded on a Mac with an Apple processor, 196 MB on Linux and 205 MB on Windows; 369 MB installed on the Mac | once, with `--instalar-navegador` |
 | Playwright's FFmpeg | about 1 MB | together with Chromium |
