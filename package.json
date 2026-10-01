@@ -49,7 +49,10 @@
     "auditor": "tsx src/cli.ts",
     "fixture": "tsx scripts/serve-fixture.ts",
     "check-report": "tsx scripts/check-report.ts",
-    "prepack": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && npm run build"
+    "prepack": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && npm run build",
+    "changelog": "changelogen --noAuthors --no-output",
+    "release:prepare": "changelogen --bump --noAuthors --output CHANGELOG.md",
+    "prepare": "husky"
   },
   "dependencies": {
     "@axe-core/playwright": "4.13.0",
@@ -58,8 +61,12 @@
     "playwright": "1.63.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "21.2.3",
+    "@commitlint/config-conventional": "21.2.3",
     "@types/node": "24.19.0",
     "axe-core": "4.13.0",
+    "changelogen": "0.6.2",
+    "husky": "9.1.7",
     "tsx": "4.23.15",
     "typescript": "7.0.2",
     "vitest": "5.0.2"
