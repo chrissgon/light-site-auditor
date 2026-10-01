@@ -1,10 +1,10 @@
 # light-site-auditor
 
-A command-line tool, `auditor <url>`, that measures a site's home page weight, how long it takes to appear on a phone over a 3G connection, and its accessibility barriers, and writes a report in plain Portuguese saying what to fix.
+A command-line tool, `auditor <url>`, that measures a site's home page weight, how long it takes to appear on a phone over a 3G connection, and its accessibility barriers, and writes a report in plain language, in Portuguese (pt-BR) or in English (en-US), saying what to fix.
 
-Every number in the report comes from the JSON files saved beside it (`lighthouse.json` and `axe.json`), and every explanation comes from a catalog written and checked in advance (`src/explanations.pt.json`), never from text generated at run time. The review of the catalog by a person is still pending.
+Every number in the report comes from the JSON files saved beside it (`lighthouse.json` and `axe.json`), and every explanation comes from a catalog written and checked in advance, one per language (`src/explanations.pt.json`, `src/explanations.en.json`), never from text generated at run time. The review of the catalogs by a person is still pending.
 
-The command's own messages, some of its flags and the report are in Portuguese.
+The report is in Portuguese by default; `--lang en-US` writes it in English. The command's own messages, some of its flags and the consent record are in Portuguese.
 
 ## Consent rule
 
@@ -44,6 +44,13 @@ Then audit:
 npx @chrissgon/light-site-auditor https://www.exemplo.com.br/ --consent consentimento.md --out relatorio-exemplo
 ```
 
+The report language is chosen with `--lang`: `pt-BR` (the default), `en-US`, or both from a single measurement:
+
+```sh
+npx @chrissgon/light-site-auditor https://www.example.com/ --consent consent.md --out report-example --lang en-US
+npx @chrissgon/light-site-auditor https://www.example.com/ --consent consent.md --out report-example --lang pt-BR,en-US
+```
+
 Or install the `auditor` command for good: `npm install -g @chrissgon/light-site-auditor`, and then `auditor --instalar-navegador` and `auditor <url> --consent <file>`.
 
 What is downloaded (measured on 2026-09-30, on a Mac with an Apple processor, with an empty cache):
@@ -61,7 +68,7 @@ Exit codes: 0 the report was written; 1 the audit failed; 2 wrong usage or a ref
 
 ## What the report holds
 
-The report folder receives `relatorio.md`, `relatorio.html`, `lighthouse.json` and `axe.json`. Without `--out`, it is `relatorios/<address>-<date and time>/`.
+The report folder receives `lighthouse.json`, `axe.json` and the report: `relatorio.md` and `relatorio.html` in Portuguese, `report.md` and `report.html` in English (decimal comma in Portuguese, decimal point in English; the numbers are the same). Without `--out`, it is `relatorios/<address>-<date and time>/`.
 
 | Part | What it shows | Where it comes from in the JSON |
 |------|---------------|---------------------------------|
@@ -73,7 +80,19 @@ The report folder receives `relatorio.md`, `relatorio.html`, `lighthouse.json` a
 
 The 3G profile is Lighthouse's own `mobileRegular3G` (300 ms round trip, 700 kbit/s, a processor 4 times slower), with Lighthouse's default simulation. Sources and access dates: [`docs/spikes/3g.md`](docs/spikes/3g.md).
 
-An excerpt of the example page's report, as the tool writes it:
+An excerpt of the example page's report, in English (`--lang en-US`):
+
+```markdown
+**Total downloaded: 200.2 KB in 4 files.**
+
+- **Main part on the screen: 4.2 seconds.** How long until the largest text or image on the screen appears.
+
+### Image without a description
+
+**What it is:** The image has no alternative text, the alt. Someone using a screen reader does not know what it shows.
+```
+
+And the same excerpt in Portuguese (the default):
 
 ```markdown
 **Total baixado: 200,2 KB em 4 arquivos.**
@@ -85,8 +104,6 @@ An excerpt of the example page's report, as the tool writes it:
 **O que é:** A imagem não tem texto alternativo, o alt. Quem usa leitor de tela não sabe o que ela mostra.
 ```
 
-In English: "Total downloaded: 200.2 KB in 4 files." "Main part on the screen: 4.2 seconds. How long it takes for the largest text or image of the screen to appear." "Image without a description. What it is: the image has no alternative text, the alt. Someone using a screen reader does not know what it shows."
-
 ## Develop
 
 ```sh
@@ -96,15 +113,15 @@ npm test
 npm run build
 ```
 
-The tests start a local server with the example page in `tests/fixtures/site/` and do not use the internet. To try it by hand: `npm run fixture` in one terminal and `npm run auditor -- http://127.0.0.1:4173/ --out relatorios/exemplo` in another. `npm run check-report -- <folder>` checks that every number of a report already written comes from the JSON files in the folder.
+The tests start a local server with the example page in `tests/fixtures/site/` and do not use the internet. To try it by hand: `npm run fixture` in one terminal and `npm run auditor -- http://127.0.0.1:4173/ --out relatorios/exemplo` in another. `npm run check-report -- <folder>` checks that every number of a report already written, in either language, comes from the JSON files in the folder.
 
 ## How the numbers are checked
 
-`tests/report.test.ts` runs the auditor on the example page, recomputes from the saved JSON files every number the report may show (without using the report's code) and fails if any other number appears. The catalog has no digits, so no number can come from it.
+`tests/report.test.ts` runs the auditor on the example page in both languages, recomputes from the saved JSON files every number the report may show (without using the report's code) and fails if any other number appears, or if the two languages show different numbers. The catalogs have no digits, so no number can come from them.
 
 ## The catalog of explanations
 
-`src/explanations.pt.json` holds, for each axe rule and each Lighthouse weight audit, a title, what it is and what to do. `tests/explanations.test.ts` checks that every sentence has at most 25 words, that every problem has a "what to do", that no technical word appears without being in the report's glossary and that the ids exist in the installed versions. A rule outside the catalog appears with the tool's original text and the mark "sem explicação ainda" (no explanation yet).
+`src/explanations.pt.json` and `src/explanations.en.json` hold, for each axe rule and each Lighthouse weight audit, a title, what it is and what to do. `tests/explanations.test.ts` checks, for each language, that the catalog has the same entries as the other, that every sentence has at most 25 words, that every problem has a "what to do", that no technical word appears without being in the report's glossary and that the ids exist in the installed versions. A rule outside the catalog appears with the tool's original text and the mark "sem explicação ainda" ("no explanation yet" in English).
 
 ## License
 
