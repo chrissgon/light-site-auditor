@@ -1,0 +1,624 @@
+{
+  "language": "en-US",
+  "review": {
+    "status": "pending-human-review",
+    "automatedChecks": "tests/explanations.test.ts: sentences of at most twenty-five words, no digits, every technical term declared and defined in the glossary, a 'what to do' in every problem, real axe-core and Lighthouse ids, the same entries as the Portuguese catalog.",
+    "humanReview": "Missing: a reading of the text by a person. Record here who reviewed it and when."
+  },
+  "glossary": {
+    "HTML": "The code that builds the page's content, such as text, images and links.",
+    "CSS": "The code that sets the page's look, such as colors, sizes and positions.",
+    "JavaScript": "The code that makes the page react to clicks and change without reloading.",
+    "attribute": "An extra piece of information written inside a piece of markup in the page's code.",
+    "alt": "The alternative text of an image. It describes the image to people who cannot see it.",
+    "contrast": "The difference in brightness between the text and the background behind it.",
+    "screen reader": "A program that reads the page aloud for people who are blind or have low vision.",
+    "browser": "The program used to open sites, such as Chrome, Safari or Firefox.",
+    "server": "The computer that stores the site and sends it to whoever visits.",
+    "cache": "A copy the browser keeps so it does not download the same file again.",
+    "compression": "A way to shrink text files before sending them, without losing any of the content.",
+    "KB": "Kilobyte, the unit used to measure file size. The larger the number, the longer the download takes.",
+    "ARIA": "A set of extra markup that explains parts of the page to screen readers.",
+    "focus": "The mark that shows where the keyboard is on the page, when moving with the Tab key.",
+    "WebP": "A modern image format, which takes less space at the same quality.",
+    "AVIF": "Another modern image format, which usually takes even less space than WebP.",
+    "3G": "An old and slow kind of mobile internet connection.",
+    "JSON": "A data file made for programs to read. The numbers in this report come from it.",
+    "Lighthouse": "A free tool from Google that measures the speed of web pages.",
+    "axe": "A free tool that looks for accessibility barriers in web pages.",
+    "accessibility": "How far the page can be used by everyone, including people with disabilities.",
+    "WCAG": "The international accessibility guidelines for the web. This check uses levels A and AA.",
+    "kbit/s": "Kilobits per second, the measure of internet speed. The smaller the number, the slower the connection.",
+    "millisecond": "One thousandth of a second."
+  },
+  "jargon": [
+    "script",
+    "DOM",
+    "viewport",
+    "render",
+    "rendering",
+    "minify",
+    "minified",
+    "minification",
+    "preload",
+    "fetchpriority",
+    "lazy",
+    "HTTP",
+    "HTTPS",
+    "CDN",
+    "byte",
+    "bytes",
+    "pixel",
+    "pixels",
+    "tag",
+    "frame",
+    "iframe",
+    "SVG",
+    "protocol",
+    "redirect",
+    "redirection",
+    "framework",
+    "plugin",
+    "API",
+    "LCP",
+    "FCP",
+    "TBT",
+    "CLS",
+    "INP",
+    "UX",
+    "SEO",
+    "landmark",
+    "label",
+    "input",
+    "div",
+    "span",
+    "role",
+    "lang",
+    "bundle",
+    "polyfill",
+    "throttling",
+    "RTT",
+    "Kbps",
+    "CPU"
+  ],
+  "impact": {
+    "critical": "blocks use",
+    "serious": "hinders a lot",
+    "moderate": "hinders",
+    "minor": "annoys"
+  },
+  "fileTypes": {
+    "html": "Page (HTML)",
+    "css": "Look (CSS)",
+    "js": "Interactive code (JavaScript)",
+    "image": "Images",
+    "font": "Fonts",
+    "other": "Other files"
+  },
+  "report": {
+    "title": "Site report",
+    "intro": "This report shows how much the page weighs and how long it takes to appear on a phone with a weak connection. It also shows what stops some people from using it.",
+    "introSources": "The numbers come from two tools, Lighthouse and axe, and are in the JSON files saved beside this report.",
+    "introTerms": "The technical words are explained at the end, in the section of words used.",
+    "page": "Page checked",
+    "measuredAt": "Measured at",
+    "weightHeading": "Page weight",
+    "weightIntro": "Each visit downloads these files. On a phone, each file costs time and part of the data plan.",
+    "weightTotal": "Total downloaded: {kb} KB in {files} {filesWord}.",
+    "weightFileOne": "file",
+    "weightFileMany": "files",
+    "weightType": "File type",
+    "weightFiles": "Files",
+    "weightSize": "Size downloaded (KB)",
+    "loadHeading": "Time to appear on a phone with 3G",
+    "loadIntro": "Lighthouse simulates an ordinary phone on a 3G connection and measures how long each part of the page takes to appear.",
+    "loadProfile": "Simulated connection: a round-trip wait of {rtt} milliseconds, a speed of {kbps} kbit/s and a processor {cpu} times slower than the measuring computer.",
+    "loadMetric": "{title}: {seconds} seconds.",
+    "speedHeading": "What makes the page heavy or slow",
+    "speedNone": "Lighthouse found no weight or speed problem on this page.",
+    "speedGainLcp": "Fixing this can make the main part appear up to {seconds} seconds sooner.",
+    "speedGainFcp": "Fixing this can make the first thing appear up to {seconds} seconds sooner.",
+    "a11yHeading": "Accessibility barriers",
+    "a11yIntro": "The axe tool looked for barriers that the WCAG guidelines ask to remove. Each one stops or hinders someone from using the page.",
+    "a11yCount": "The axe tool found {rules} {rulesWord}, in {places} {placesWord}.",
+    "a11yRuleOne": "type of barrier",
+    "a11yRuleMany": "types of barrier",
+    "a11yPlaceOne": "place on the page",
+    "a11yPlaceMany": "places on the page",
+    "a11yNone": "The axe tool found no barrier under the WCAG rules on this page.",
+    "a11yNote": "Automatic tools find only part of the barriers. A test with real people is still needed.",
+    "a11yPlaces": "It appears in {places} places on the page.",
+    "a11yPlacesOne": "It appears in one place on the page.",
+    "a11yWhere": "Where it is",
+    "a11yMore": "More places are in the axe file.",
+    "severity": "Severity",
+    "whatItIs": "What it is",
+    "whatToDo": "What to do",
+    "noExplanation": "no explanation yet",
+    "noExplanationNote": "This problem has no plain-language explanation yet. Below is the tool's original text.",
+    "original": "Original text",
+    "termsHeading": "Words used in this report",
+    "sourcesHeading": "Where the numbers come from",
+    "sourcesIntro": "Each number above can be checked in the JSON files in this folder, at the place shown below.",
+    "sourcesWeight": "Weight by type: sum of the files of the same type, in the Lighthouse file",
+    "sourcesTotal": "Total downloaded: sum of all files, equal to Lighthouse's own total",
+    "sourcesTime": "Times: measured value of each metric, in milliseconds, in the Lighthouse file",
+    "sourcesProfile": "Simulated connection: settings used by Lighthouse",
+    "sourcesGain": "Possible gains: estimated saving of each problem, in milliseconds, in the Lighthouse file",
+    "sourcesA11y": "Barriers and places: the axe list of barriers and the places of each one"
+  },
+  "metrics": {
+    "first-contentful-paint": {
+      "title": "First thing on the screen",
+      "what": "How long until the first text or image appears. Before that, the person sees a blank screen."
+    },
+    "largest-contentful-paint": {
+      "title": "Main part on the screen",
+      "what": "How long until the largest text or image on the screen appears. That is when the page looks ready to the visitor."
+    }
+  },
+  "lighthouse": {
+    "total-byte-weight": {
+      "title": "The page is heavy",
+      "what": "The whole page is heavy to download. On a phone with a weak connection, this delays everything and uses up the data plan.",
+      "fix": "Start with the largest files in the weight table. Images are usually the first to shrink.",
+      "terms": []
+    },
+    "image-delivery-insight": {
+      "title": "Images larger than they need to be",
+      "what": "Some images have more detail or more weight than the size they are shown at on the screen.",
+      "fix": "Save each image at the size it is shown at and use a modern format, such as WebP or AVIF.",
+      "terms": [
+        "WebP",
+        "AVIF"
+      ]
+    },
+    "render-blocking-insight": {
+      "title": "Files that hold the page blank",
+      "what": "The browser waits for some look or code files to finish downloading before showing anything.",
+      "fix": "Ask whoever looks after the site to load these files later, or to put the essentials inside the page itself.",
+      "terms": [
+        "browser"
+      ]
+    },
+    "lcp-discovery-insight": {
+      "title": "The main image has no priority",
+      "what": "The browser does not know the main image is the most important one and does not download it first.",
+      "fix": "Ask whoever looks after the site to mark the main image as a priority and never delay its loading.",
+      "terms": [
+        "browser"
+      ]
+    },
+    "network-dependency-tree-insight": {
+      "title": "Files that wait for others",
+      "what": "Some files only start downloading after another one finishes. On a slow connection, each wait adds time.",
+      "fix": "Ask whoever looks after the site to shorten these waits and tell the browser early about the important files.",
+      "terms": [
+        "browser"
+      ]
+    },
+    "cache-insight": {
+      "title": "Files downloaded again on every visit",
+      "what": "The server does not let the browser keep the files. Whoever comes back to the site downloads everything again.",
+      "fix": "Set the server to allow a long cache for images and files that change little.",
+      "terms": [
+        "browser",
+        "server",
+        "cache"
+      ]
+    },
+    "document-latency-insight": {
+      "title": "The page is slow to start arriving",
+      "what": "The server is slow to answer, sends the visitor to another address first or sends the text without compression.",
+      "fix": "Check the hosting, avoid needless address detours and turn on compression on the server.",
+      "terms": [
+        "server",
+        "compression"
+      ]
+    },
+    "font-display-insight": {
+      "title": "Text invisible while the font arrives",
+      "what": "The text stays hidden until the site's own font finishes downloading.",
+      "fix": "Ask whoever looks after the site to show the text in a common font while the site's own font arrives.",
+      "terms": []
+    },
+    "unused-css-rules": {
+      "title": "Look rules the page does not use",
+      "what": "The page downloads CSS rules it does not use. They add weight and bring nothing to the visitor.",
+      "fix": "Remove the rules no page uses, or separate the rules of each page.",
+      "terms": [
+        "CSS"
+      ]
+    },
+    "unused-javascript": {
+      "title": "Interactive code the page does not use",
+      "what": "The page downloads JavaScript code that does not run on it.",
+      "fix": "Remove code packages and parts that are not used, or load each part only where it is needed.",
+      "terms": [
+        "JavaScript"
+      ]
+    },
+    "unminified-css": {
+      "title": "Look files with spare spaces",
+      "what": "The CSS file goes out with spaces, line breaks and comments that only help whoever writes the code.",
+      "fix": "Turn on the option to shrink files in your site-building tool or in your hosting before publishing.",
+      "terms": [
+        "CSS"
+      ]
+    },
+    "unminified-javascript": {
+      "title": "Interactive code with spare spaces",
+      "what": "The JavaScript file goes out with spaces, line breaks and comments that only help whoever writes the code.",
+      "fix": "Turn on the option to shrink files in your site-building tool or in your hosting before publishing.",
+      "terms": [
+        "JavaScript"
+      ]
+    },
+    "legacy-javascript-insight": {
+      "title": "Extra code for old browsers",
+      "what": "The page sends extra code to work in old browsers. Current browsers do not need it.",
+      "fix": "Ask whoever looks after the site to produce the code only for current browsers.",
+      "terms": [
+        "browser"
+      ]
+    },
+    "duplicated-javascript-insight": {
+      "title": "Repeated code",
+      "what": "The same code package appears more than once, and the phone downloads every copy.",
+      "fix": "Ask whoever looks after the site to keep a single copy of each code package.",
+      "terms": []
+    },
+    "third-parties-insight": {
+      "title": "Other companies' services weighing on the page",
+      "what": "Tools from other companies, such as chats, ads and visit counters, download files and keep the phone busy.",
+      "fix": "Keep only the services you really use and remove the others.",
+      "terms": []
+    },
+    "unsized-images": {
+      "title": "Images without a set size",
+      "what": "Some images do not state their width and height. The content jumps around when they finish arriving.",
+      "fix": "State the width and height of each image in the page's code.",
+      "terms": []
+    },
+    "dom-size-insight": {
+      "title": "Page with too many parts",
+      "what": "The page has a very large number of blocks. The phone is slow to build and update everything.",
+      "fix": "Split long content into more pages and remove hidden blocks nobody uses.",
+      "terms": []
+    },
+    "bootup-time": {
+      "title": "Interactive code slow to run",
+      "what": "The phone spends a lot of time processing the page's JavaScript code.",
+      "fix": "Remove code and services that are not essential, or load them after the page appears.",
+      "terms": [
+        "JavaScript"
+      ]
+    },
+    "mainthread-work-breakdown": {
+      "title": "The phone works too hard to build the page",
+      "what": "The phone's processor stays busy for a long time with the page's look, code and drawing.",
+      "fix": "Reduce interactive code and heavy visual effects, starting with the ones you do not use.",
+      "terms": []
+    },
+    "viewport-insight": {
+      "title": "Page not fitted to the phone screen",
+      "what": "The page does not tell the phone it should fit the screen width, and touch can be slow to respond.",
+      "fix": "Ask whoever looks after the site to add, at the start of the page, the markup that fits it to the phone screen.",
+      "terms": []
+    },
+    "modern-http-insight": {
+      "title": "Files delivered the old way",
+      "what": "The server delivers the files with an old version of the web's rules, slower when there are many files.",
+      "fix": "Ask the hosting to turn on the current version of file delivery.",
+      "terms": [
+        "server"
+      ]
+    }
+  },
+  "axe": {
+    "color-contrast": {
+      "title": "Text hard to read",
+      "what": "The text has little contrast with the background. People with low vision, or reading in the sun, cannot read it.",
+      "fix": "Darken the text or lighten the background until reading is easy. A contrast tool shows when it passes.",
+      "terms": [
+        "contrast"
+      ]
+    },
+    "image-alt": {
+      "title": "Image without a description",
+      "what": "The image has no alternative text, the alt. Someone using a screen reader does not know what it shows.",
+      "fix": "Write in the alt what the image shows, in a few words. If it is only decoration, leave the alt empty.",
+      "terms": [
+        "alt",
+        "screen reader"
+      ]
+    },
+    "label": {
+      "title": "Form field without a name",
+      "what": "A form field has no name tied to it. Someone using a screen reader does not know what to fill in.",
+      "fix": "Put visible text beside each field and tie that text to the field in the code.",
+      "terms": [
+        "screen reader"
+      ]
+    },
+    "link-name": {
+      "title": "Link without text",
+      "what": "A link has no text saying where it leads. Often it is an icon on its own.",
+      "fix": "Write text in the link, or give the icon a name the screen reader can read.",
+      "terms": [
+        "screen reader"
+      ]
+    },
+    "button-name": {
+      "title": "Button without a name",
+      "what": "A button has no text saying what it does. Someone using a screen reader hears only the word button.",
+      "fix": "Write text in the button, or give the button's icon a name the screen reader can read.",
+      "terms": [
+        "screen reader"
+      ]
+    },
+    "input-button-name": {
+      "title": "Form button without a name",
+      "what": "A form button has no text saying what it does.",
+      "fix": "Write on the button what it does, such as send or search.",
+      "terms": []
+    },
+    "input-image-alt": {
+      "title": "Image button without a description",
+      "what": "A button made with an image has no alternative text. Someone using a screen reader does not know what it does.",
+      "fix": "Write in the image's alt what the button does, such as send or search.",
+      "terms": [
+        "alt",
+        "screen reader"
+      ]
+    },
+    "html-has-lang": {
+      "title": "Page without a stated language",
+      "what": "The page does not say what language it is written in. The screen reader may read the text with the wrong accent.",
+      "fix": "State the page's language in the code, for example American English.",
+      "terms": [
+        "screen reader"
+      ]
+    },
+    "html-lang-valid": {
+      "title": "Page language written wrong",
+      "what": "The language stated in the page's code does not exist in the official list of languages.",
+      "fix": "Correct the language code. For American English, use that language's official code.",
+      "terms": []
+    },
+    "valid-lang": {
+      "title": "Language of a passage written wrong",
+      "what": "A passage of the page states a language that does not exist in the official list of languages.",
+      "fix": "Correct that passage's language code, or delete the information if the passage is in the page's language.",
+      "terms": []
+    },
+    "document-title": {
+      "title": "Page without a title",
+      "what": "The page has no title. The title is what shows in the browser tab and what the screen reader reads first.",
+      "fix": "Give the page a short title that says the site's name and the page's subject.",
+      "terms": [
+        "screen reader",
+        "browser"
+      ]
+    },
+    "select-name": {
+      "title": "List of options without a name",
+      "what": "A choice list has no name. Someone using a screen reader does not know what they are choosing.",
+      "fix": "Put visible text beside the list and tie that text to the list in the code.",
+      "terms": [
+        "screen reader"
+      ]
+    },
+    "frame-title": {
+      "title": "Embedded content without a name",
+      "what": "Content from another site inside the page, such as a map or video, has no name.",
+      "fix": "Give that content a short name that says what it is, such as store map.",
+      "terms": []
+    },
+    "meta-viewport": {
+      "title": "Page blocks zoom",
+      "what": "The page does not let the person enlarge the text with their fingers. People who see little need the zoom.",
+      "fix": "Remove from the page's code the rule that blocks zoom.",
+      "terms": []
+    },
+    "meta-refresh": {
+      "title": "Page that reloads by itself",
+      "what": "The page reloads or changes address by itself after a while. The person loses what they were reading.",
+      "fix": "Remove the automatic reload, or let the person choose when to update.",
+      "terms": []
+    },
+    "list": {
+      "title": "List built the wrong way",
+      "what": "A list has, inside it, parts that are not items. The screen reader counts the items wrong.",
+      "fix": "Leave only the list's items inside it, and put the rest outside.",
+      "terms": [
+        "screen reader"
+      ]
+    },
+    "listitem": {
+      "title": "List item outside a list",
+      "what": "A list item is loose, outside a list. The screen reader does not announce it as part of a list.",
+      "fix": "Put the item inside a list, or turn it into ordinary text.",
+      "terms": [
+        "screen reader"
+      ]
+    },
+    "role-img-alt": {
+      "title": "Figure without a description",
+      "what": "An element marked as an image has no description. Someone using a screen reader does not know what it shows.",
+      "fix": "Give that image a short name that says what it shows.",
+      "terms": [
+        "screen reader"
+      ]
+    },
+    "svg-img-alt": {
+      "title": "Drawing without a description",
+      "what": "A drawing or icon marked as an image has no description for someone using a screen reader.",
+      "fix": "Give the drawing a short name that says what it shows.",
+      "terms": [
+        "screen reader"
+      ]
+    },
+    "aria-required-attr": {
+      "title": "Incomplete accessibility markup",
+      "what": "A part of the page uses ARIA markup, but a piece of information it requires is missing.",
+      "fix": "Ask whoever looks after the site to complete that part's ARIA markup, or remove it.",
+      "terms": [
+        "ARIA",
+        "accessibility"
+      ]
+    },
+    "aria-valid-attr-value": {
+      "title": "Accessibility markup with a wrong value",
+      "what": "A piece of ARIA markup has a value that does not exist. The screen reader may announce something false.",
+      "fix": "Ask whoever looks after the site to correct the value of that part's ARIA markup.",
+      "terms": [
+        "screen reader",
+        "ARIA",
+        "accessibility"
+      ]
+    },
+    "aria-valid-attr": {
+      "title": "Accessibility markup with a wrong name",
+      "what": "A piece of ARIA markup has a name that does not exist, and the screen reader ignores it.",
+      "fix": "Ask whoever looks after the site to correct the name of that part's ARIA markup.",
+      "terms": [
+        "screen reader",
+        "ARIA",
+        "accessibility"
+      ]
+    },
+    "aria-allowed-attr": {
+      "title": "Accessibility markup in the wrong place",
+      "what": "A piece of ARIA markup was used on a part of the page that does not accept it.",
+      "fix": "Ask whoever looks after the site to remove that ARIA markup or swap it for an allowed one.",
+      "terms": [
+        "ARIA",
+        "accessibility"
+      ]
+    },
+    "aria-hidden-focus": {
+      "title": "Hidden part the keyboard reaches",
+      "what": "A part is hidden from the screen reader, but the keyboard still reaches it. The person cannot tell where they are.",
+      "fix": "Take that part out of the keyboard's path, or let the screen reader see it.",
+      "terms": [
+        "screen reader"
+      ]
+    },
+    "aria-command-name": {
+      "title": "Command without a name",
+      "what": "A button or link made with ARIA markup has no name. Someone using a screen reader does not know what it does.",
+      "fix": "Give that command a short name that says what it does.",
+      "terms": [
+        "screen reader",
+        "ARIA"
+      ]
+    },
+    "aria-input-field-name": {
+      "title": "Field without a name",
+      "what": "A field made with ARIA markup has no name. Someone using a screen reader does not know what to fill in.",
+      "fix": "Give that field a visible name that says what to fill in.",
+      "terms": [
+        "screen reader",
+        "ARIA"
+      ]
+    },
+    "nested-interactive": {
+      "title": "Button inside a button",
+      "what": "A clickable control is inside another one. The keyboard and the screen reader cannot reach the inner one.",
+      "fix": "Separate the two controls, one beside the other.",
+      "terms": [
+        "screen reader"
+      ]
+    },
+    "link-in-text-block": {
+      "title": "Link told apart only by color",
+      "what": "A link in the middle of text differs only by its color. People who cannot tell colors apart do not find it.",
+      "fix": "Underline the links that sit in the middle of text.",
+      "terms": []
+    },
+    "autocomplete-valid": {
+      "title": "Autofill set up wrong",
+      "what": "A field asks for a kind of autofill that does not exist. The browser cannot help fill it in.",
+      "fix": "Ask whoever looks after the site to use one of the official kinds of autofill, such as name or email.",
+      "terms": [
+        "browser"
+      ]
+    },
+    "video-caption": {
+      "title": "Video without captions",
+      "what": "A video has no captions. People who are deaf or have the sound off do not understand what is said.",
+      "fix": "Add captions to the video with what is said and the important sounds.",
+      "terms": []
+    },
+    "object-alt": {
+      "title": "Embedded content without a description",
+      "what": "A piece of content embedded in the page has no alternative text for someone using a screen reader.",
+      "fix": "Give that content a text that says what it shows.",
+      "terms": [
+        "screen reader"
+      ]
+    },
+    "area-alt": {
+      "title": "Clickable image area without a description",
+      "what": "A clickable part of an image has no alternative text. Someone using a screen reader does not know where it leads.",
+      "fix": "Write in each area's alt where it leads.",
+      "terms": [
+        "alt",
+        "screen reader"
+      ]
+    },
+    "bypass": {
+      "title": "No shortcut to the content",
+      "what": "There is no way to skip the menu and go straight to the content. Keyboard users pass through the whole menu on every page.",
+      "fix": "Add a link to skip to the content at the start of the page, or mark the main regions in the code.",
+      "terms": []
+    },
+    "form-field-multiple-labels": {
+      "title": "Field with more than one name",
+      "what": "A form field has two or more names tied to it. The screen reader may read the wrong name.",
+      "fix": "Leave a single name tied to each field.",
+      "terms": [
+        "screen reader"
+      ]
+    },
+    "scrollable-region-focusable": {
+      "title": "Scrolling area the keyboard cannot reach",
+      "what": "An area of the page scrolls, but someone using only the keyboard cannot get to it to scroll.",
+      "fix": "Ask whoever looks after the site to make that area reachable by keyboard.",
+      "terms": []
+    },
+    "duplicate-id-aria": {
+      "title": "Repeated internal names",
+      "what": "Two parts of the page use the same internal name, and the screen reader ties the description to the wrong part.",
+      "fix": "Ask whoever looks after the site to give each part a unique internal name.",
+      "terms": [
+        "screen reader"
+      ]
+    },
+    "aria-roles": {
+      "title": "Markup for a kind of part that does not exist",
+      "what": "A part of the page claims to be something using ARIA markup that does not exist.",
+      "fix": "Ask whoever looks after the site to correct or remove that ARIA markup.",
+      "terms": [
+        "ARIA"
+      ]
+    },
+    "aria-required-children": {
+      "title": "Group without the parts it should have",
+      "what": "A part marked with ARIA as a group, list or menu does not contain the items that kind requires.",
+      "fix": "Ask whoever looks after the site to complete the group's items or correct the ARIA markup.",
+      "terms": [
+        "ARIA"
+      ]
+    },
+    "aria-required-parent": {
+      "title": "Item outside the right group",
+      "what": "An item marked with ARIA, such as a menu item, is outside the group it belongs to.",
+      "fix": "Ask whoever looks after the site to put the item inside the right group.",
+      "terms": [
+        "ARIA"
+      ]
+    }
+  }
+}

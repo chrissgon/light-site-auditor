@@ -3,11 +3,13 @@
 
 export type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-export const oneDecimal = (n: number) => (Math.round(n * 10) / 10).toFixed(1).replace(".", ",");
+/** One decimal with the report language's decimal mark: "," in Portuguese (the default), "." in English. */
+export const oneDecimal = (n: number, mark = ",") => (Math.round(n * 10) / 10).toFixed(1).replace(".", mark);
 const TYPE: Record<string, string> = { Document: "html", Stylesheet: "css", Script: "js", Image: "image", Font: "font" };
 
 /** Every number the report may show, derived from the raw JSON. */
-export function numbersFromRaw(lhr: Json, axe: Json) {
+export function numbersFromRaw(lhr: Json, axe: Json, mark = ",") {
+  const one = (n: number) => oneDecimal(n, mark);
   const allowed = new Set<string>();
   const add = (...values: (string | number)[]) => values.forEach((v) => allowed.add(String(v)));
   const sums: Record<string, { files: number; bytes: number }> = {};
@@ -21,16 +23,16 @@ export function numbersFromRaw(lhr: Json, axe: Json) {
     files += 1;
     bytes += item.transferSize;
   }
-  for (const s of Object.values(sums)) add(s.files, s.bytes, oneDecimal(s.bytes / 1000));
-  add(files, bytes, oneDecimal(bytes / 1000), lhr.audits["total-byte-weight"].numericValue);
+  for (const s of Object.values(sums)) add(s.files, s.bytes, one(s.bytes / 1000));
+  add(files, bytes, one(bytes / 1000), lhr.audits["total-byte-weight"].numericValue);
   for (const id of ["first-contentful-paint", "largest-contentful-paint"]) {
     const ms = lhr.audits[id].numericValue;
-    add(ms, oneDecimal(ms / 1000));
+    add(ms, one(ms / 1000));
   }
   const t = lhr.configSettings.throttling;
   add(t.rttMs, t.throughputKbps, t.cpuSlowdownMultiplier);
   for (const audit of Object.values<Json>(lhr.audits)) {
-    for (const ms of Object.values<number>(audit.metricSavings ?? {})) add(ms, oneDecimal(ms / 1000));
+    for (const ms of Object.values<number>(audit.metricSavings ?? {})) add(ms, one(ms / 1000));
   }
   add(axe.violations.length, axe.violations.reduce((n: number, v: Json) => n + v.nodes.length, 0));
   for (const v of axe.violations) add(v.nodes.length);
@@ -63,8 +65,8 @@ export const htmlProse = (html: string) =>
 
 /** The report's problems: numbers that no raw value explains, code spans with digits not copied from
  * the JSON, and a difference between the numbers of the Markdown and the HTML report. Empty = clean. */
-export function reportProblems(md: string, html: string, lhr: Json, axe: Json) {
-  const { allowed } = numbersFromRaw(lhr, axe);
+export function reportProblems(md: string, html: string, lhr: Json, axe: Json, mark = ",") {
+  const { allowed } = numbersFromRaw(lhr, axe, mark);
   const stray = (markdownProse(md).match(NUMBER) ?? []).filter((n) => !allowed.has(n));
   const raw = [...strings(lhr), ...strings(axe)];
   const invented = markdownCode(md).filter((span) => /\d/.test(span) && !raw.some((s) => s.includes(span)));

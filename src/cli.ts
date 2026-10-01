@@ -8,19 +8,24 @@ import { parseArgs } from "node:util";
 import { chromium } from "playwright";
 import { runAxe } from "./a11y.js";
 import { checkConsent } from "./consent.js";
+import { LANGUAGES, parseLanguages, REPORT_NAME } from "./explanations.js";
 import { runLighthouse } from "./lighthouse.js";
 import { buildReport } from "./report.js";
 
-const USAGE = `Uso: auditor <url> [--consent <arquivo>] [--out <pasta>]
+const USAGE = `Uso: auditor <url> [--consent <arquivo>] [--out <pasta>] [--lang <idioma>]
      auditor --instalar-navegador
 
 Mede o peso da página, o tempo para aparecer num celular com 3G e as barreiras de acessibilidade,
-e escreve relatorio.md e relatorio.html em português, com lighthouse.json e axe.json ao lado.
+e escreve o relatório em português (relatorio.md e relatorio.html) ou em inglês (report.md e
+report.html), com lighthouse.json e axe.json ao lado.
 
   --consent <arquivo>   registro do consentimento do dono do site (obrigatório para sites reais;
                         páginas deste computador, como localhost, não precisam). Modelo e texto
                         do pedido: docs/field/consentimento.md
   --out <pasta>         onde salvar (padrão: relatorios/<endereço>-<data e hora>)
+  --lang <idioma>       idioma do relatório: pt-BR (padrão), en-US, ou os dois separados por
+                        vírgula (pt-BR,en-US), com uma só medição
+                        (report language: pt-BR, the default, en-US, or both)
   --instalar-navegador  baixa, uma vez, o Chromium que o auditor usa (o do Playwright)
   --help                mostra esta ajuda
 
@@ -52,6 +57,7 @@ export async function main(argv: string[], io: Output = defaultOutput): Promise<
       options: {
         out: { type: "string" },
         consent: { type: "string" },
+        lang: { type: "string" },
         "instalar-navegador": { type: "boolean" },
         help: { type: "boolean" },
       },
@@ -71,6 +77,11 @@ export async function main(argv: string[], io: Output = defaultOutput): Promise<
         "Se aparecer um aviso em inglês sobre 'npx playwright install', pode ignorar: o auditor já traz a versão certa do Playwright.\n",
     );
     return spawnSync(command, args, { stdio: "inherit" }).status ?? 1;
+  }
+  const wanted = parseLanguages(parsed.values.lang);
+  if ("unknown" in wanted) {
+    io.stderr(`Idioma desconhecido: ${wanted.unknown}. Use ${LANGUAGES.join(" ou ")} (unknown language).\n`);
+    return 2;
   }
   const [target] = parsed.positionals;
   if (!target || parsed.positionals.length > 1) {
@@ -114,6 +125,7 @@ export async function main(argv: string[], io: Output = defaultOutput): Promise<
 
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
   const out = resolve(parsed.values.out ?? join("relatorios", `${url.host.replace(/[^\w.-]/g, "_")}-${stamp}`));
+  const written: string[] = [];
   try {
     mkdirSync(out, { recursive: true });
     // One after the other: the Lighthouse simulation starts from a real load, and a second browser
@@ -124,14 +136,18 @@ export async function main(argv: string[], io: Output = defaultOutput): Promise<
     io.stderr(`axe (WCAG 2.1 A e AA): ${url.href}\n`);
     const axe = await runAxe(url.href);
     writeFileSync(join(out, "axe.json"), `${JSON.stringify(axe, null, 2)}\n`);
-    const report = buildReport(lhr, axe, { lighthouse: "lighthouse.json", axe: "axe.json" });
-    writeFileSync(join(out, "relatorio.md"), report.markdown);
-    writeFileSync(join(out, "relatorio.html"), report.html);
+    for (const language of wanted.languages) {
+      const report = buildReport(lhr, axe, { lighthouse: "lighthouse.json", axe: "axe.json" }, language);
+      const name = join(out, REPORT_NAME[language]);
+      writeFileSync(`${name}.md`, report.markdown);
+      writeFileSync(`${name}.html`, report.html);
+      written.push(`${name}.md`, `${name}.html`);
+    }
   } catch (error) {
     io.stderr(`A auditoria falhou: ${(error as Error).message}\n`);
     return 1;
   }
-  io.stdout(`${join(out, "relatorio.md")}\n${join(out, "relatorio.html")}\n`);
+  io.stdout(`${written.join("\n")}\n`);
   return 0;
 }
 

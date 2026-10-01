@@ -1,11 +1,22 @@
 import type { AxeResults } from "./a11y.js";
-import { CATALOG, explainAxe, explainLighthouse, fill, glossaryClosure, type Explanation } from "./explanations.js";
+import {
+  CATALOGS,
+  DECIMAL_MARK,
+  DEFAULT_LANGUAGE,
+  explainAxe,
+  explainLighthouse,
+  fill,
+  glossaryClosure,
+  type Catalog,
+  type Explanation,
+  type Language,
+} from "./explanations.js";
 import type { LighthouseResult } from "./lighthouse.js";
 import { FILE_TYPES, weightByType } from "./weight.js";
 
 /**
- * Builds the Portuguese report from the two raw results. Every sentence comes from the catalog
- * (src/explanations.pt.json); every number is a value of the raw JSON or a sum of its values;
+ * Builds the report, in Portuguese or in English, from the two raw results. Every sentence comes from
+ * the language's catalog (src/explanations.<language>.json); every number is a value of the raw JSON or a sum of its values;
  * everything copied from the JSON as is (URL, date, HTML snippets) is shown as code.
  */
 
@@ -22,15 +33,12 @@ export interface ReportFiles {
   axe: string;
 }
 
-const T = CATALOG.report;
 const METRICS = ["first-contentful-paint", "largest-contentful-paint"] as const;
 /** Lighthouse's own threshold: an audit scoring below 0.9 is not passed. */
 const PASS = 0.9;
 
-/** One decimal, Portuguese decimal comma: 4202.484 ms → "4,2" seconds; 200211 bytes → "200,2" KB. */
-export const oneDecimal = (n: number) => (Math.round(n * 10) / 10).toFixed(1).replace(".", ",");
-const seconds = (ms: number) => oneDecimal(ms / 1000);
-const kb = (bytes: number) => oneDecimal(bytes / 1000);
+/** One decimal, with the language's decimal mark (the Portuguese comma by default): 4202.484 ms → "4,2" seconds; 200211 bytes → "200,2" KB. */
+export const oneDecimal = (n: number, mark = ",") => (Math.round(n * 10) / 10).toFixed(1).replace(".", mark);
 
 /** The Lighthouse insights and diagnostics that did not pass, largest possible gain first. */
 export function lighthouseProblems(lhr: LighthouseResult) {
@@ -45,7 +53,7 @@ export function lighthouseProblems(lhr: LighthouseResult) {
     .sort((a, b) => b.lcp - a.lcp || b.fcp - a.fcp);
 }
 
-function explanationBlocks(e: Explanation, heading: Inline[], extra: Inline[][] = []): Block[] {
+function explanationBlocks(T: Catalog["report"], e: Explanation, heading: Inline[], extra: Inline[][] = []): Block[] {
   if (!e.explained) {
     return [
       { h: 3, text: [...heading, ` (${e.mark})`] },
@@ -62,7 +70,11 @@ function explanationBlocks(e: Explanation, heading: Inline[], extra: Inline[][] 
   ];
 }
 
-export function buildBlocks(lhr: LighthouseResult, axe: AxeResults, files: ReportFiles): Block[] {
+export function buildBlocks(lhr: LighthouseResult, axe: AxeResults, files: ReportFiles, language: Language = DEFAULT_LANGUAGE): Block[] {
+  const CATALOG = CATALOGS[language];
+  const T = CATALOG.report;
+  const seconds = (ms: number) => oneDecimal(ms / 1000, DECIMAL_MARK[language]);
+  const kb = (bytes: number) => oneDecimal(bytes / 1000, DECIMAL_MARK[language]);
   const weight = weightByType(lhr);
   const throttling = lhr.configSettings.throttling;
   const blocks: Block[] = [
@@ -122,10 +134,10 @@ export function buildBlocks(lhr: LighthouseResult, axe: AxeResults, files: Repor
   blocks.push({ h: 2, text: [T.speedHeading] });
   if (problems.length === 0) blocks.push({ p: [T.speedNone] });
   for (const { audit, lcp, fcp } of problems) {
-    const e = explainLighthouse(audit.id, audit.title);
+    const e = explainLighthouse(audit.id, audit.title, CATALOG);
     const gain: Inline[][] =
       lcp > 0 ? [[fill(T.speedGainLcp, { seconds: seconds(lcp) })]] : fcp > 0 ? [[fill(T.speedGainFcp, { seconds: seconds(fcp) })]] : [];
-    blocks.push(...explanationBlocks(e, [e.title], gain));
+    blocks.push(...explanationBlocks(T, e, [e.title], gain));
   }
 
   // Accessibility barriers.
@@ -139,11 +151,11 @@ export function buildBlocks(lhr: LighthouseResult, axe: AxeResults, files: Repor
           placesWord: places === 1 ? T.a11yPlaceOne : T.a11yPlaceMany,
         }) }] });
   for (const v of axe.violations) {
-    const e = explainAxe(v.id, v.help);
+    const e = explainAxe(v.id, v.help, CATALOG);
     const impact = v.impact ? CATALOG.impact[v.impact] : undefined;
     const shown = v.nodes.slice(0, 5);
     blocks.push(
-      ...explanationBlocks(e, [e.title], [
+      ...explanationBlocks(T, e, [e.title], [
         ...(impact ? [[{ strong: `${T.severity}:` }, ` ${impact}`] as Inline[]] : []),
         [v.nodes.length === 1 ? T.a11yPlacesOne : fill(T.a11yPlaces, { places: v.nodes.length })],
         [{ strong: `${T.a11yWhere}:` }],
@@ -156,10 +168,10 @@ export function buildBlocks(lhr: LighthouseResult, axe: AxeResults, files: Repor
 
   // Glossary: every term the prose above uses, and the terms its definitions use.
   const prose = blocks.flatMap(textOf);
-  const terms = glossaryClosure([...prose, T.termsHeading, T.sourcesHeading, T.sourcesIntro]);
+  const terms = glossaryClosure([...prose, T.termsHeading, T.sourcesHeading, T.sourcesIntro], CATALOG);
   blocks.push(
     { h: 2, text: [T.termsHeading] },
-    { ul: terms.map((t) => [{ strong: `${t}:` }, ` ${CATALOG.glossary[t as keyof typeof CATALOG.glossary]}`]) },
+    { ul: terms.map((t) => [{ strong: `${t}:` }, ` ${CATALOG.glossary[t]}`]) },
   );
 
   // Where every number comes from.
@@ -274,7 +286,7 @@ table { border-collapse: collapse; width: 100%; }
 th, td { text-align: left; padding: 0.4rem 0.6rem; border-bottom: 1px solid #d0d0d0; }
 `;
 
-export function toHtml(blocks: Block[]): string {
+export function toHtml(blocks: Block[], language: Language = DEFAULT_LANGUAGE): string {
   const body = blocks.map((b) => {
     if ("h" in b) return `<h${b.h}>${htmlInline(b.text)}</h${b.h}>`;
     if ("p" in b) return `<p>${htmlInline(b.p)}</p>`;
@@ -285,11 +297,11 @@ export function toHtml(blocks: Block[]): string {
   });
   return [
     "<!doctype html>",
-    '<html lang="pt-BR">',
+    `<html lang="${language}">`,
     "<head>",
     '<meta charset="utf-8">',
     '<meta name="viewport" content="width=device-width, initial-scale=1">',
-    `<title>${esc(T.title)}</title>`,
+    `<title>${esc(CATALOGS[language].report.title)}</title>`,
     `<style>${STYLE}</style>`,
     "</head>",
     "<body>",
@@ -302,7 +314,7 @@ export function toHtml(blocks: Block[]): string {
   ].join("\n");
 }
 
-export function buildReport(lhr: LighthouseResult, axe: AxeResults, files: ReportFiles) {
-  const blocks = buildBlocks(lhr, axe, files);
-  return { markdown: toMarkdown(blocks), html: toHtml(blocks) };
+export function buildReport(lhr: LighthouseResult, axe: AxeResults, files: ReportFiles, language: Language = DEFAULT_LANGUAGE) {
+  const blocks = buildBlocks(lhr, axe, files, language);
+  return { markdown: toMarkdown(blocks), html: toHtml(blocks, language) };
 }

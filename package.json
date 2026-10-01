@@ -1,7 +1,7 @@
 {
   "name": "@chrissgon/light-site-auditor",
-  "version": "0.1.0",
-  "description": "Checks a small business's home page for weight, load time on 3G and accessibility (WCAG 2.1 AA), and explains the fixes in plain Portuguese. Real sites only with the owner's consent.",
+  "version": "0.2.0",
+  "description": "Checks a small business's home page for weight, load time on 3G and accessibility (WCAG 2.1 AA), and explains the fixes in plain Portuguese or English. Real sites only with the owner's consent.",
   "keywords": [
     "accessibility",
     "acessibilidade",
@@ -14,7 +14,8 @@
     "audit",
     "auditoria",
     "cli",
-    "portuguese"
+    "portuguese",
+    "english"
   ],
   "homepage": "https://github.com/chrissgon/light-site-auditor#readme",
   "bugs": {
